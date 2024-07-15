@@ -1,6 +1,6 @@
 // Constante para completar la ruta de la API.
 const USUARIO_API = 'services/public/usuario.php';
- 
+
 // Función para obtener los datos y generar el gráfico de barras.
 const graficoBarrasUsuarios = async () => {
     // Petición para obtener los datos del gráfico.
@@ -23,6 +23,53 @@ const graficoBarrasUsuarios = async () => {
         console.log(DATA.error);
     }
 }
- 
+
+// Función para generar y mostrar un gráfico de barras.
+const barGraph = (id, labels, data, title, subtitle) => {
+    // Obtener el elemento canvas
+    const canvas = document.getElementById(id);
+    const ctx = canvas.getContext('2d');
+    
+    // Configurar el gráfico de barras
+    const barChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: subtitle,
+                data: data,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: title
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+};
+
 // Llamar a la función para generar el gráfico
 graficoBarrasUsuarios();

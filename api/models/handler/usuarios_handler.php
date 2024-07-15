@@ -205,4 +205,12 @@ class UsuarioHandler
         $params = array($this->id);
         return Database::getRow($sql, $params);
     }
+
+    public function readUsuariosPorMes() {
+        $sql = 'SELECT DATE_FORMAT(fecha_registro, "%Y-%m") AS mes, COUNT(*) AS total
+                FROM tb_usuarios
+                GROUP BY mes
+                ORDER BY mes';
+        return Database::getRows($sql);
+    }
 }

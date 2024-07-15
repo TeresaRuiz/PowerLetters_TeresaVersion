@@ -1,6 +1,6 @@
 <?php
 // Se incluye la clase para trabajar con la base de datos.
-require_once ('../../helpers/database.php');
+require_once('../../helpers/database.php');
 /*
  *	Clase para manejar el comportamiento de los datos de la tabla usuario.
  */
@@ -104,7 +104,7 @@ class UsuarioHandler
         $params = array($this->nombre, $this->apellido, $this->correo, $this->dui, $this->telefono, $this->nacimiento, $this->direccion, $_SESSION['idUsuario']);
         return Database::executeRow($sql, $params);
     }
-    
+
     /*
      *   Métodos para cambiar el estado
      */
@@ -131,7 +131,7 @@ class UsuarioHandler
         $params = array($value, $value, $value);
         return Database::getRows($sql, $params);
     }
-    
+
     /*
      *   Métodos para crear usuarios
      */
@@ -154,7 +154,7 @@ class UsuarioHandler
                 ORDER BY apellido_usuario';
         return Database::getRows($sql);
     }
-    
+
     /*
      *   Métodos para leer solo uno
      */
@@ -206,11 +206,13 @@ class UsuarioHandler
         return Database::getRow($sql, $params);
     }
 
-    public function readUsuariosPorMes() {
+    // Método para obtener los usuarios registrados por mes.
+    public function readUsuariosPorMes()
+    {
         $sql = 'SELECT DATE_FORMAT(fecha_registro, "%Y-%m") AS mes, COUNT(*) AS total
-                FROM tb_usuarios
-                GROUP BY mes
-                ORDER BY mes';
+            FROM tb_usuarios
+            GROUP BY mes
+            ORDER BY mes ASC';
         return Database::getRows($sql);
     }
 }

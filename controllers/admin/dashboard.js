@@ -2,7 +2,6 @@
 const USUARIOS_API = 'services/public/usuario.php';
 
 document.addEventListener('DOMContentLoaded', () => {
-
     // Llamada a la funciones que generan los gráficos en la página web.
     graficoBarrasUsuarios();
 });

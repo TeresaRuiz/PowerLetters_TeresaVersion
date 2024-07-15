@@ -9,7 +9,7 @@ require_once('../../libraries/fpdf185/fpdf.php');
 class Report extends FPDF
 {
     // Constante para definir la ruta de las vistas del sitio privado.
-    const CLIENT_URL = 'http://localhost/NewPowerLetters/Views/Private/';
+    const CLIENT_URL = 'http://localhost/PowerLetters_TeresaVersion/Views/Private/';
     // Propiedad para guardar el título del reporte.
     private $title = null;
 

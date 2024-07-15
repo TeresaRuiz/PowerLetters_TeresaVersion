@@ -11,7 +11,7 @@ if (isset($_GET['action'])) {
     // Se declara e inicializa un arreglo para guardar el resultado que retorna la API.
     $result = array('status' => 0, 'session' => 0, 'recaptcha' => 0, 'message' => null, 'error' => null, 'exception' => null, 'username' => null);
     // Se verifica si existe una sesión iniciada como usuario para realizar las acciones correspondientes.
-    if (isset($_SESSION['idUsuario'])) {
+    if (isset($_SESSION['idAdministrador'])) {
         $result['session'] = 1;
         // Se compara la acción a realizar cuando un usuario ha iniciado sesión.
         switch ($_GET['action']) {

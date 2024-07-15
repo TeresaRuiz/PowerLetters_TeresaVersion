@@ -77,7 +77,7 @@ const fillTable = async (form = null) => {
             TABLE_BODY.innerHTML += `
             <tr>
                 <td><img src="${SERVER_URL}images/usuarios/default.png" width="50"></td>
-                <td>${row.nombre}</td>
+                <td>${row.nombre_usuario}</td>
                 <td>${row.nombre_usuario}</td>
                 <td>${row.correo}</td>
                 <td>${row.direccion}</td>

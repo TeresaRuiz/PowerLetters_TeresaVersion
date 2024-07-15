@@ -160,9 +160,9 @@ if (isset($_GET['action'])) {
                 if ($result['dataset'] = $usuario->readUsuariosPorMes()) { 
                     $result['status'] = 1;
                 } else {
+                    $result['status'] = 0;
                     $result['error'] = 'No hay usuarios registrados por el momento';
                 }
-                break;
             default:
                 $result['error'] = 'Acción no disponible dentro de la sesión';
         }

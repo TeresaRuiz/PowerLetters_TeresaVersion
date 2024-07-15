@@ -25,3 +25,5 @@ VALUES
 ('Manuel', 'Palacios', '1989tv@music.com', '1989TaylorVersion', 'contraseña901');
 
 SELECT*FROM administrador;
+
+/* Probando git hub

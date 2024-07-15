@@ -171,7 +171,7 @@ let testimonialFeatured = new Swiper('.testimonial__swiper', {
 
 
 
-/*=============== SHOW SCROLL UP ===============*/
+/*=============== SHOW SCROLL UP ===============
 
 
 const scrollUp = () => {
@@ -182,7 +182,7 @@ const scrollUp = () => {
 }
 window.addEventListener('scroll', scrollUp)
 
-/*=============== SCROLL SECTIONS ACTIVE LINK ===============*/
+/*=============== SCROLL SECTIONS ACTIVE LINK ============
 
 
 const sections = document.querySelectorAll('section[id]')

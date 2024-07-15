@@ -236,3 +236,7 @@ color: var(--text-color);
   text-align: center;
 } 
 
+.col-sm-12 col-md-6 col-lg-4 canvas {
+  width: 400px;
+  height: 300px;
+}

@@ -47,7 +47,7 @@ if (isset($_GET['action'])) {
                     !$pedido->setIdDetalle($_POST['detalle'])
                 ) {
                     $result['error'] = $pedido->getDataError(); // Obtener mensaje de error si la validación falla.
-                } elseif ($pedido->createRow()) { // Intentar crear un nuevo pedido.
+                } elseif ($pedido->createDetail()) { // Intentar crear un nuevo pedido.
                     $result['status'] = 1; // Indicar que la operación fue exitosa.
                     $result['message'] = 'Pedido creado con éxito';
                 } else {

@@ -16,7 +16,7 @@ const graficoBarrasUsuarios = async () => {
             meses.push(row.mes);
             cantidades.push(row.total);
         });
-        barGraph('chart1', meses, cantidades, 'Usuarios registrados', 'Cantidad de usuarios por Mes');
+        barGraph('chart1', meses, cantidades, 'Usuarios registrados', 'Cantidad de usuarios por registrados por mes');
     } else {
         document.getElementById('chart1').remove();
         console.error(DATA.error);

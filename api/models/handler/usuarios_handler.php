@@ -1,6 +1,6 @@
 <?php
 // Se incluye la clase para trabajar con la base de datos.
-require_once('../../helpers/database.php');
+require_once ('../../helpers/database.php');
 /*
  *	Clase para manejar el comportamiento de los datos de la tabla usuario.
  */
@@ -209,10 +209,11 @@ class UsuarioHandler
     // Método para obtener los usuarios registrados por mes.
     public function readUsuariosPorMes()
     {
-        $sql = 'SELECT DATE_FORMAT(fecha_registro, "%Y-%m") AS mes, COUNT(*) AS total
+        $sql = 'SELECT DATE_FORMAT(fecha_registro, "%M") AS mes, COUNT(*) AS total
             FROM tb_usuarios
             GROUP BY mes
-            ORDER BY mes ASC';
+            ORDER BY MIN(fecha_registro) ASC';
         return Database::getRows($sql);
     }
+
 }

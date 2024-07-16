@@ -33,7 +33,7 @@ const graficoBarrasUsuarios = async () => {
 const generarDatosFicticios = () => {
     let ventasDiarias = [];
     let fechaActual = new Date();
-    let numDias = 10; // Por ejemplo, para los últimos 30 días
+    let numDias = 7; // Por ejemplo, para los últimos 30 días
 
     for (let i = 0; i < numDias; i++) {
         // Generar una fecha retrocediendo días aleatorios
@@ -69,7 +69,7 @@ const graficoLineasVentasDiarias = () => {
         });
 
         // Llamada a la función para generar y mostrar un gráfico de líneas.
-        lineGraph('lineChart', fechas, cantidades, 'Ventas diarias', 'Ventas diarias de libros');
+        lineGraph('lineChart', fechas, cantidades, 'Ventas diarias', '');
     } else {
         document.getElementById('lineChart').remove();
         console.log('No hay datos disponibles para mostrar el gráfico.');
@@ -86,7 +86,7 @@ const graficoPastelDistribucionLibrosPorGenero = async () => {
             generos.push(row.genero);
             cantidades.push(row.cantidad);
         });
-        pieGraph('pieChart', generos, cantidades, 'Top 5 de géneros literarios más populares');
+        pieGraph('pieChart', generos, cantidades, '');
     } else {
         document.getElementById('pieChart').remove();
         console.error(DATA.error);
@@ -104,7 +104,7 @@ const graficoRadarEvaluacionesLibros = async () => {
             libros.push(row.titulo);
             calificaciones.push(row.calificacion_promedio);
         });
-        radarGraph('radarChart', libros, calificaciones, 'Evaluaciones de Libros');
+        radarGraph('radarChart', libros, calificaciones, '');
     } else {
         document.getElementById('radarChart').remove();
         console.log(DATA.exception);
@@ -127,7 +127,7 @@ const graficoPolarDistribucionPedidos = async () => {
             estados.push(row.estado);
             cantidades.push(row.cantidad);
         });
-        polarGraph('polarChart', estados, cantidades, 'Distribución de pedidos por estado');
+        polarGraph('polarChart', estados, cantidades, '');
     } else {
         document.getElementById('polarChart').remove();
         console.error(DATA.exception);

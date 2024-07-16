@@ -10,7 +10,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css">
     <style>
         .chart-container {
-            margin-left: 100px; /* Ajusta este valor según sea necesario */
+            margin-left: 85px; /* Ajusta este valor según sea necesario */
+        }
+        .text-align {
+            text-align: center;
         }
     </style>
     
@@ -37,24 +40,28 @@
         <!-- Contenedor de gráficos -->
         <div class="row">
             <div class="col-sm-12 col-md-6 col-lg-6 chart-container" style="width: 700px; height: 400px;">
-                <h3 class="">Cantidad de usuarios registrados por mes</h3>
+                <h3 class="text-align">Cantidad de usuarios registrados por mes</h3>
                 <canvas id="chart1"></canvas>
             </div>
             <div class="col-sm-12 col-md-6 col-lg-6 chart-container" style="width: 700px; height: 400px;">
+                <h3 class="text-align">Ventas diarias de libros</h3>
                 <canvas id="lineChart"></canvas>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12 col-md-6 col-lg-6 chart-container" style="width: 700px; height: 400px;">
+                <h3 class="text-align">Top 5 de géneros literarios más populares</h3>
                 <canvas id="pieChart"></canvas>
             </div>
             <div class="col-sm-12 col-md-6 col-lg-6 chart-container" style="width: 700px; height: 400px;">
+                <h3 class="text-align">Evaluaciones de libros</h3>
                 <canvas id="radarChart"></canvas>
             </div>
         </div>
         <br><br><br><br><br><br>
         <div class="row">
             <div class="col-sm-12 col-md-6 col-lg-6 chart-container" style="width: 700px; height: 400px; position: relative;">
+                <h3 class="text-align">Distribución de pedidos por estados</h3><br><br><br>
                 <canvas id="polarChart" style="position: absolute; top: 50%; left: 100%; transform: translate(-50%, -50%);"></canvas>
             </div>
         </div>

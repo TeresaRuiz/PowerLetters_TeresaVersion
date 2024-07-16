@@ -209,10 +209,12 @@ class UsuarioHandler
     // Método para obtener los usuarios registrados por mes y agregar where del año actual 
     public function readUsuariosPorMes()
     {
-        $sql = 'SELECT DATE_FORMAT(fecha_registro, "%M") AS mes, COUNT(*) AS total
-            FROM tb_usuarios
-            GROUP BY mes
-            ORDER BY MIN(fecha_registro) ASC';
+        $sql = 'SELECT ELT(MONTH(fecha_registro), "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre") AS mes, 
+               COUNT(*) AS total
+        FROM tb_usuarios
+        WHERE YEAR(fecha_registro) = 2024
+        GROUP BY mes
+        ORDER BY MIN(fecha_registro) ASC';
         return Database::getRows($sql);
     }
 

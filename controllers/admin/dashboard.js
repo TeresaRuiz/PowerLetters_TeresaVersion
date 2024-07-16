@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     graficoBarrasUsuarios();
     graficoLineasVentasDiarias();
     graficoPastelDistribucionLibrosPorGenero();
+    graficoRadarEvaluacionesLibros();
 });
 
 // Función para obtener los datos y generar el gráfico de barras.
@@ -87,5 +88,23 @@ const graficoPastelDistribucionLibrosPorGenero = async () => {
     } else {
         document.getElementById('pieChart').remove();
         console.error(DATA.error);
+    }
+}
+
+
+// Función para obtener y mostrar el gráfico de radar de evaluaciones de libros
+const graficoRadarEvaluacionesLibros = async () => {
+    const DATA = await fetchData(LIBROS_API, 'readEvaluacionesLibros');
+    if (DATA.status) {
+        let libros = [];
+        let calificaciones = [];
+        DATA.dataset.forEach(row => {
+            libros.push(row.titulo);
+            calificaciones.push(row.calificacion_promedio);
+        });
+        radarGraph('radarChart', libros, calificaciones, 'Evaluaciones de Libros');
+    } else {
+        document.getElementById('radarChart').remove();
+        console.log(DATA.exception);
     }
 }

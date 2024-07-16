@@ -201,7 +201,8 @@ class LibroHandler
         }
     }
 
-    public function readDistribucionLibrosPorGenero() {
+    public function readDistribucionLibrosPorGenero()
+    {
         // Query para obtener la distribución de libros por género, limitando a los 5 más populares
         $sql = 'SELECT g.nombre AS genero, COUNT(l.id_libro) AS cantidad 
                 FROM tb_generos g 
@@ -209,9 +210,19 @@ class LibroHandler
                 GROUP BY g.nombre 
                 ORDER BY cantidad DESC 
                 LIMIT 5';
-        
+
         // Llamar al método getRows de la clase Database para ejecutar la consulta
         return Database::getRows($sql);
     }
-    
+    // Función para obtener las evaluaciones de los libros
+    public function readEvaluacionesLibros()
+    {
+        $sql = 'SELECT tb_libros.titulo, AVG(tb_comentarios.calificacion) AS calificacion_promedio
+            FROM tb_libros
+            INNER JOIN tb_detalle_pedidos ON tb_libros.id_libro = tb_detalle_pedidos.id_libro
+            INNER JOIN tb_comentarios ON tb_detalle_pedidos.id_detalle = tb_comentarios.id_detalle
+            GROUP BY tb_libros.id_libro';
+        $params = null;
+        return Database::getRows($sql, $params);
+    }
 }

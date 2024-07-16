@@ -143,6 +143,81 @@ const barGraph = (canvas, xAxis, yAxis, legend, title) => {
         }
     });
 }
+/*
+*   Función para generar un gráfico de radar. Requiere la librería chart.js para funcionar.
+*   Parámetros: canvas (identificador de la etiqueta canvas), labels (etiquetas para cada punto), data (valores de los datos) y title (título del gráfico).
+*   Retorno: ninguno.
+*/
+const radarGraph = (canvas, labels, data, title) => {
+    // Se crea una instancia para generar el gráfico con los datos recibidos.
+    new Chart(document.getElementById(canvas), {
+        type: 'radar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Evaluaciones',
+                data: data,
+                fill: true,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgb(54, 162, 235)',
+                pointBackgroundColor: 'rgb(54, 162, 235)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(54, 162, 235)'
+            }]
+        },
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: title
+                }
+            },
+            elements: {
+                line: {
+                    borderWidth: 3
+                }
+            }
+        }
+    });
+}
+/*
+*   Función para generar un gráfico polar. Requiere la librería chart.js para funcionar.
+*   Parámetros: canvas (identificador de la etiqueta canvas), labels (etiquetas para cada sector), values (valores de los datos) y title (título del gráfico).
+*   Retorno: ninguno.
+*/
+const polarGraph = (canvas, labels, values, title) => {
+    // Se declara un arreglo para guardar códigos de colores en formato hexadecimal.
+    let colors = [];
+    // Se generan códigos hexadecimales de 6 cifras de acuerdo con el número de datos a mostrar y se agregan al arreglo.
+    values.forEach(() => {
+        colors.push('#' + (Math.random().toString(16)).substring(2, 8));
+    });
+    // Se crea una instancia para generar el gráfico con los datos recibidos.
+    new Chart(document.getElementById(canvas), {
+        type: 'polarArea',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: values,
+                backgroundColor: colors
+            }]
+        },
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: title
+                }
+            },
+            scale: {
+                ticks: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
 
 /*
 *   Función para generar un gráfico de líneas. Requiere la librería chart.js para funcionar.

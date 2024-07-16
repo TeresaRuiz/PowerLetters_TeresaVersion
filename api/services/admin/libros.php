@@ -16,7 +16,8 @@ if (isset($_GET['action'])) {
         'dataset' => null, // Datos resultantes de la operación.
         'error' => null, // Mensaje de error si ocurre un problema.
         'exception' => null,// Excepción del servidor de base de datos si es aplicable.
-        'fileStatus' => null);// Estado de archivo (si es necesario para alguna operación).
+        'fileStatus' => null
+    );// Estado de archivo (si es necesario para alguna operación).
 
     // Verificar si el usuario tiene una sesión iniciada como administrador.
     if (isset($_SESSION['idAdministrador'])) {
@@ -78,7 +79,7 @@ if (isset($_GET['action'])) {
                 }
                 break;
 
-                
+
             case 'updateRow':
                 $_POST = Validator::validateForm($_POST);
                 if (
@@ -114,9 +115,17 @@ if (isset($_GET['action'])) {
                     $result['error'] = 'Ocurrió un problema al eliminar el libro'; // Mensaje de error si ocurre un problema.
                 }
                 break;
-                case 'readDistribucionLibrosPorGenero':
+            case 'readDistribucionLibrosPorGenero':
+                // Verificar si la función existe en la clase Libro y llamarla
+                if ($result['dataset'] = $libros->readDistribucionLibrosPorGenero()) {
+                    $result['status'] = 1;
+                } else {
+                    $result['error'] = 'No se encontraron datos de distribución de libros por género';
+                }
+                break;
+                case 'readEvaluacionesLibros':
                     // Verificar si la función existe en la clase Libro y llamarla
-                    if ($result['dataset'] = $libros->readDistribucionLibrosPorGenero()) {
+                    if ($result['dataset'] = $libros->readEvaluacionesLibros()) {
                         $result['status'] = 1;
                     } else {
                         $result['error'] = 'No se encontraron datos de distribución de libros por género';

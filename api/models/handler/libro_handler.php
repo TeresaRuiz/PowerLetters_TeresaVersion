@@ -221,7 +221,9 @@ class LibroHandler
             FROM tb_libros
             INNER JOIN tb_detalle_pedidos ON tb_libros.id_libro = tb_detalle_pedidos.id_libro
             INNER JOIN tb_comentarios ON tb_detalle_pedidos.id_detalle = tb_comentarios.id_detalle
-            GROUP BY tb_libros.id_libro';
+            GROUP BY tb_libros.id_libro
+            ORDER BY calificacion_promedio DESC
+            Limit 5;';
         $params = null;
         return Database::getRows($sql, $params);
     }

@@ -206,7 +206,7 @@ class UsuarioHandler
         return Database::getRow($sql, $params);
     }
 
-    // Método para obtener los usuarios registrados por mes.
+    // Método para obtener los usuarios registrados por mes y agregar where del año actual 
     public function readUsuariosPorMes()
     {
         $sql = 'SELECT DATE_FORMAT(fecha_registro, "%M") AS mes, COUNT(*) AS total

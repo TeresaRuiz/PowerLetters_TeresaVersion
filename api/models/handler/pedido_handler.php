@@ -320,4 +320,15 @@ class PedidoHandler
                 GROUP BY estado';
         return Database::getRows($sql);
     }
+
+    public function readEvolucionPedidosPorEstado()
+    {
+        $sql = 'SELECT estado, COUNT(id_pedido) total_pedidos
+        FROM tb_pedidos
+        WHERE id_pedido = ?
+        GROUP BY estado
+        ORDER BY total_pedidos DESC';
+    $params = array($this->id);
+    return Database::getRows($sql, $params);
+    }
 }

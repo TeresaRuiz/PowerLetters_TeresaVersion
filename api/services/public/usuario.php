@@ -1,6 +1,6 @@
 <?php
 // Se incluye la clase del modelo.
-require_once ('../../models/data/usuario_data.php');
+require_once('../../models/data/usuario_data.php');
 
 // Se comprueba si existe una acción a realizar, de lo contrario se finaliza el script con un mensaje de error.
 if (isset($_GET['action'])) {
@@ -157,12 +157,21 @@ if (isset($_GET['action'])) {
                 }
                 break;
             case 'readUsuariosPorMes':
-                if ($result['dataset'] = $usuario->readUsuariosPorMes()) { 
+                if ($result['dataset'] = $usuario->readUsuariosPorMes()) {
                     $result['status'] = 1;
                 } else {
                     $result['status'] = 0;
                     $result['error'] = 'No hay usuarios registrados por el momento';
                 }
+            case 'readEvolucionPedidosPorEstado':
+                if (!$usuario->setId($_POST['idUsuario'])) {
+                    $result['error'] = $usuario->getDataError();
+                } elseif ($result['dataset'] = $usuario->readEvolucionPedidosPorEstado()) {
+                    $result['status'] = 1;
+                } else {
+                    $result['error'] = 'No existen pedidos por estado en el momento';
+                }
+                break;
             default:
                 $result['error'] = 'Acción no disponible dentro de la sesión';
         }
@@ -234,7 +243,7 @@ if (isset($_GET['action'])) {
     // Se indica el tipo de contenido a mostrar y su respectivo conjunto de caracteres.
     header('Content-type: application/json; charset=utf-8');
     // Se imprime el resultado en formato JSON y se retorna al controlador.
-    print (json_encode($result));
+    print(json_encode($result));
 } else {
-    print (json_encode('Recurso no disponible'));
+    print(json_encode('Recurso no disponible'));
 }

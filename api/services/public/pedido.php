@@ -146,7 +146,6 @@ if (isset($_GET['action'])) {
                     $result['error'] = 'No tiene pedidos realizados';
                 }
                 break;
-
             case 'readDistribucionPedidosPorEstado':
                 // Verificar si la función existe en la clase Libro y llamarla
                 if ($result['dataset'] = $pedido->readDistribucionPedidosPorEstado()) {
@@ -155,8 +154,15 @@ if (isset($_GET['action'])) {
                     $result['error'] = 'No se encontraron datos disponibles';
                 }
                 break;
-
-
+                case 'readEvolucionPedidosPorEstado':
+                    if (!$pedido->setId($_POST['idPedido'])) {
+                        $result['error'] = $pedido->getDataError();
+                    } elseif ($result['dataset'] = $pedido->readEvolucionPedidosPorEstado()) {
+                        $result['status'] = 1;
+                    } else {
+                        $result['error'] = 'No existen estados para los pedidos por el momento';
+                    }
+                    break;
             default:
                 $result['error'] = 'Acción no disponible dentro de la sesión';
         }

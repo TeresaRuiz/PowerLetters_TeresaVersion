@@ -107,6 +107,15 @@ if (isset($_GET['action'])) {
                     $result['error'] = 'No se encontraron datos disponibles';
                 }
                 break;
+                case 'readEvolucionPedidosPorEstado':
+                    if (!$pedido->setId($_POST['idPedido'])) {
+                        $result['error'] = $pedido->getDataError();
+                    } elseif ($result['dataset'] = $pedido->readEvolucionPedidosPorEstado()) {
+                        $result['status'] = 1;
+                    } else {
+                        $result['error'] = 'No existen estados para los pedidos por el momento';
+                    }
+                    break;
 
             default: // Caso por defecto para manejar acciones desconocidas.
                 $result['error'] = 'Acción no disponible dentro de la sesión'; // Mensaje si la acción no es válida.

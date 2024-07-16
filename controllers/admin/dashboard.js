@@ -1,10 +1,12 @@
 // Constante para completar la ruta de la API.
 const USUARIOS_API = 'services/public/usuario.php';
+const LIBROS_API = 'services/admin/libros.php';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Llamada a la funciones que generan los gráficos en la página web.
     graficoBarrasUsuarios();
     graficoLineasVentasDiarias();
+    graficoPastelDistribucionLibrosPorGenero();
 });
 
 // Función para obtener los datos y generar el gráfico de barras.
@@ -71,3 +73,19 @@ const graficoLineasVentasDiarias = () => {
     }
 }
 
+// Función para obtener los datos de distribución de libros por género y mostrar el gráfico de pastel
+const graficoPastelDistribucionLibrosPorGenero = async () => {
+    const DATA = await fetchData(LIBROS_API, 'readDistribucionLibrosPorGenero');
+    if (DATA.status) {
+        let generos = [];
+        let cantidades = [];
+        DATA.dataset.forEach(row => {
+            generos.push(row.genero);
+            cantidades.push(row.cantidad);
+        });
+        pieGraph('pieChart', generos, cantidades, 'Top 5 de géneros literarios más populares');
+    } else {
+        document.getElementById('pieChart').remove();
+        console.error(DATA.error);
+    }
+}

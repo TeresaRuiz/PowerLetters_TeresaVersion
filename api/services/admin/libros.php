@@ -114,6 +114,14 @@ if (isset($_GET['action'])) {
                     $result['error'] = 'Ocurrió un problema al eliminar el libro'; // Mensaje de error si ocurre un problema.
                 }
                 break;
+                case 'readDistribucionLibrosPorGenero':
+                    // Verificar si la función existe en la clase Libro y llamarla
+                    if ($result['dataset'] = $libros->readDistribucionLibrosPorGenero()) {
+                        $result['status'] = 1;
+                    } else {
+                        $result['error'] = 'No se encontraron datos de distribución de libros por género';
+                    }
+                    break;
             default: // Caso por defecto para manejar acciones desconocidas.
                 $result['error'] = 'Acción no disponible dentro de la sesión'; // Mensaje si la acción no es válida.
         }

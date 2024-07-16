@@ -200,4 +200,18 @@ class LibroHandler
             return false;
         }
     }
+
+    public function readDistribucionLibrosPorGenero() {
+        // Query para obtener la distribución de libros por género, limitando a los 5 más populares
+        $sql = 'SELECT g.nombre AS genero, COUNT(l.id_libro) AS cantidad 
+                FROM tb_generos g 
+                LEFT JOIN tb_libros l ON g.id_genero = l.id_genero 
+                GROUP BY g.nombre 
+                ORDER BY cantidad DESC 
+                LIMIT 5';
+        
+        // Llamar al método getRows de la clase Database para ejecutar la consulta
+        return Database::getRows($sql);
+    }
+    
 }

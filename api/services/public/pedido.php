@@ -74,15 +74,15 @@ if (isset($_GET['action'])) {
                                         SELECT id_libro FROM tb_detalle_pedidos WHERE id_detalle = ?)';
                     $paramsExistencias = array($_POST['idDetalle']);
                     $existenciasActuales = Database::getRow($sqlExistencias, $paramsExistencias)['existencias'];
-            
+
                     // Obtener la cantidad anterior del detalle del pedido
                     $sqlCantidadAnterior = 'SELECT cantidad FROM tb_detalle_pedidos WHERE id_detalle = ?';
                     $paramsCantidadAnterior = array($_POST['idDetalle']);
                     $cantidadAnterior = Database::getRow($sqlCantidadAnterior, $paramsCantidadAnterior)['cantidad'];
-            
+
                     // Calcular las nuevas existencias teniendo en cuenta la cantidad anterior y la nueva cantidad
                     $existenciasNuevas = $existenciasActuales + $cantidadAnterior - $_POST['cantidadLibro'];
-            
+
                     // Verificar si la cantidad es igual o menor que las existencias disponibles
                     if ($_POST['cantidadLibro'] <= $existenciasNuevas) {
                         // Actualizar el detalle del pedido
@@ -94,7 +94,7 @@ if (isset($_GET['action'])) {
                                                      SELECT id_libro FROM tb_detalle_pedidos WHERE id_detalle = ?)';
                             $paramsUpdateExistencias = array($existenciasNuevas, $_POST['idDetalle']);
                             Database::executeRow($sqlUpdateExistencias, $paramsUpdateExistencias);
-            
+
                             $result['status'] = 1;
                             $result['message'] = 'Cantidad modificada correctamente';
                             $result['cliente'] = $_SESSION['idUsuario'];
@@ -108,8 +108,8 @@ if (isset($_GET['action'])) {
                     }
                 }
                 break;
-            
-            
+
+
             // Acción para remover un producto del carrito de compras.
             case 'deleteDetail':
                 if (!$pedido->setIdDetalle($_POST['idDetalle'])) {
@@ -144,6 +144,15 @@ if (isset($_GET['action'])) {
                     $result['status'] = 1;
                 } else {
                     $result['error'] = 'No tiene pedidos realizados';
+                }
+                break;
+
+            case 'readDistribucionPedidosPorEstado':
+                // Verificar si la función existe en la clase Libro y llamarla
+                if ($result['dataset'] = $pedido->readDistribucionPedidosPorEstado()) {
+                    $result['status'] = 1;
+                } else {
+                    $result['error'] = 'No se encontraron datos disponibles';
                 }
                 break;
 

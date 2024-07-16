@@ -20,7 +20,7 @@ if (isset($_GET['action'])) {
     );// Estado de archivo (si es necesario para alguna operación).
 
     // Verificar si el usuario tiene una sesión iniciada como administrador.
-    if (isset($_SESSION['idAdministrador'])or true) {
+    if (isset($_SESSION['idAdministrador']) or true) {
         // Usar un 'switch' para manejar la acción específica solicitada por el usuario.
         switch ($_GET['action']) {
             case 'searchRows':
@@ -98,6 +98,16 @@ if (isset($_GET['action'])) {
                     $result['error'] = 'No exiten estados disponibles'; // Mensaje si no se encuentran autores.
                 }
                 break;
+
+            case 'readDistribucionPedidosPorEstado':
+                // Verificar si la función existe en la clase Libro y llamarla
+                if ($result['dataset'] = $pedido->readDistribucionPedidosPorEstado()) {
+                    $result['status'] = 1;
+                } else {
+                    $result['error'] = 'No se encontraron datos disponibles';
+                }
+                break;
+
             default: // Caso por defecto para manejar acciones desconocidas.
                 $result['error'] = 'Acción no disponible dentro de la sesión'; // Mensaje si la acción no es válida.
         }

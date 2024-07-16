@@ -1,6 +1,7 @@
 // Constante para completar la ruta de la API.
 const USUARIOS_API = 'services/public/usuario.php';
 const LIBROS_API = 'services/admin/libros.php';
+const PEDIDO_API = 'services/admin/pedido.php';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Llamada a la funciones que generan los gráficos en la página web.
@@ -8,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     graficoLineasVentasDiarias();
     graficoPastelDistribucionLibrosPorGenero();
     graficoRadarEvaluacionesLibros();
+    graficoPolarDistribucionPedidos();
 });
 
 // Función para obtener los datos y generar el gráfico de barras.
@@ -106,5 +108,28 @@ const graficoRadarEvaluacionesLibros = async () => {
     } else {
         document.getElementById('radarChart').remove();
         console.log(DATA.exception);
+    }
+}
+
+/*
+*   Función asíncrona para obtener y mostrar el gráfico de polar de distribución de pedidos por estado.
+*   Requiere la función fetchData para obtener los datos desde la API.
+*   Parámetros: ninguno.
+*   Retorno: ninguno.
+*/
+const graficoPolarDistribucionPedidos = async () => {
+    const DATA = await fetchData(PEDIDO_API, 'readDistribucionPedidosPorEstado');
+    
+    if (DATA.status) {
+        let estados = [];
+        let cantidades = [];
+        DATA.dataset.forEach(row => {
+            estados.push(row.estado);
+            cantidades.push(row.cantidad);
+        });
+        polarGraph('polarChart', estados, cantidades, 'Distribución de pedidos por estado');
+    } else {
+        document.getElementById('polarChart').remove();
+        console.error(DATA.exception);
     }
 }

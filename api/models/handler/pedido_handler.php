@@ -313,4 +313,11 @@ class PedidoHandler
         $params = array($this->id_detalle, $_SESSION['idPedido']);
         return Database::executeRow($sql, $params);
     }
+
+    public function readDistribucionPedidosPorEstado() {
+        $sql = 'SELECT estado, COUNT(id_pedido) AS cantidad
+                FROM tb_pedidos
+                GROUP BY estado';
+        return Database::getRows($sql);
+    }
 }

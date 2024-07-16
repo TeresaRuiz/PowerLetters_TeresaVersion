@@ -33,7 +33,7 @@ const graficoBarrasUsuarios = async () => {
 const generarDatosFicticios = () => {
     let ventasDiarias = [];
     let fechaActual = new Date();
-    let numDias = 7; // Por ejemplo, para los últimos 30 días
+    let numDias = 7; // Por ejemplo, para los últimos 7 días
 
     for (let i = 0; i < numDias; i++) {
         // Generar una fecha retrocediendo días aleatorios

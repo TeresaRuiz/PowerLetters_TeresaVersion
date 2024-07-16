@@ -124,11 +124,11 @@ WHERE c.estado_comentario ="ACTIVO";
 
 DELIMITER //
 
-CREATE TRIGGER before_insert_tb_usuarios
-BEFORE INSERT ON tb_usuarios
-FOR EACH ROW
-BEGIN
-  SET NEW.fecha_registro = CURDATE();
-END//
+-- CREATE TRIGGER before_insert_tb_usuarios
+-- BEFORE INSERT ON tb_usuarios
+-- FOR EACH ROW
+-- BEGIN
+  -- SET NEW.fecha_registro = CURDATE();
+-- END//
 
-DELIMITER ;
+-- DELIMITER ;

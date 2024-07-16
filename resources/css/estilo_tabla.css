@@ -240,3 +240,8 @@ color: var(--text-color);
   width: 400px;
   height: 300px;
 }
+
+.row {
+  display: flex;
+  align-items: center;
+}

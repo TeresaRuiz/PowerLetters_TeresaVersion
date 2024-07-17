@@ -163,14 +163,6 @@ if (isset($_GET['action'])) {
                     $result['status'] = 0;
                     $result['error'] = 'No hay usuarios registrados por el momento';
                 }
-            case 'readEvolucionPedidosPorEstado':
-                if (!$usuario->setId($_POST['idUsuario'])) {
-                    $result['error'] = $usuario->getDataError();
-                } elseif ($result['dataset'] = $usuario->readEvolucionPedidosPorEstado()) {
-                    $result['status'] = 1;
-                } else {
-                    $result['error'] = 'No existen pedidos por estado en el momento';
-                }
                 break;
             default:
                 $result['error'] = 'Acción no disponible dentro de la sesión';

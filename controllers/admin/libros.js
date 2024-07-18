@@ -141,10 +141,10 @@ const openUpdate = async (id) => {
         precio.value = ROW.precio;
         descripcion.value = ROW.descripcion_libro;
         existencias.value = ROW.existencias;
-        fillSelect(GENERO_API, 'readAll', 'nombreGEN', ROW.nombre_genero);
-        fillSelect(EDITORIAL_API, 'readAll', 'editorial', ROW.nombre_editorial);
-        fillSelect(CLASIFICACION_API, 'readAll', 'clasificacion', ROW.nombre_clasificacion);
-        fillSelect(AUTORES_API, 'readAll', 'autor', ROW.nombre_autor);
+        fillSelect(GENERO_API, 'readAll', 'nombreGEN', parseInt(ROW.id_genero));
+        fillSelect(EDITORIAL_API, 'readAll', 'editorial', parseInt(ROW.id_editorial));
+        fillSelect(CLASIFICACION_API, 'readAll', 'clasificacion', parseInt(ROW.id_clasificacion));
+        fillSelect(AUTORES_API, 'readAll', 'autor', parseInt(ROW.id_autor));
         AbrirModal();
         MODAL_TITLE.textContent = 'Actualizar un libro';
     } else {

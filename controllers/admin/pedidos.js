@@ -155,26 +155,33 @@ const openChart = async (id) => {
     // Se define una constante tipo objeto con los datos del registro seleccionado.
     const FORM = new FormData();
     FORM.append('idPedido', id);
+
     // Petición para obtener los datos del registro solicitado.
     const DATA = await fetchData(PEDIDO_API, 'readEvolucionPedidosPorEstado', FORM);
+
     // Se comprueba si la respuesta es satisfactoria, de lo contrario se muestra un mensaje con el error.
     if (DATA.status) {
-        // Se muestra la caja de diálogo con su título.
-        CHART_MODAL.show();
-        // Se declaran los arreglos para guardar los datos a graficar.
-        let productos = [];
-        let unidades = [];
-        // Se recorre el conjunto de registros fila por fila a través del objeto row.
+        // Abre el modal para mostrar la gráfica.
+        AbrirModalGrafica();
+
+        // Declara los arreglos para guardar los datos a graficar.
+        let estados = [];
+        let totalPedidos = [];
+
+        // Recorre el conjunto de registros fila por fila a través del objeto row.
         DATA.dataset.forEach(row => {
-            // Se agregan los datos a los arreglos.
-            productos.push(row.nombre_producto);
-            unidades.push(row.total);
+            // Agrega los datos a los arreglos.
+            estados.push(row.estado);
+            totalPedidos.push(row.total_pedidos);
         });
-        // Se agrega la etiqueta canvas al contenedor de la modal.
+
+        // Agrega la etiqueta canvas al contenedor de la modal.
         document.getElementById('chartContainer').innerHTML = `<canvas id="chart"></canvas>`;
-        // Llamada a la función para generar y mostrar un gráfico de barras. Se encuentra en el archivo components.js
-        barGraph('chart', productos, unidades, 'Cantidad de productos', 'Top 5 de productos con más unidades vendidas');
+
+        // Llama a la función para generar y mostrar un gráfico de barras.
+        barGraph('chart', estados, totalPedidos, 'Cantidad de pedidos', 'Evolución de pedidos por estado');
     } else {
         sweetAlert(4, DATA.error, true);
     }
-}
+};
+

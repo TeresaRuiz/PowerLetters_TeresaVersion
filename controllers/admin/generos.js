@@ -82,6 +82,9 @@ const fillTable = async (form = null) => {
                     <a onclick="openDelete(${row.id_genero})">
                         <i class="ri-delete-bin-line"></i>
                     </a>
+                    <a onclick="openChart(${row.id_genero})">
+                    <i class="ri-line-chart-line"></i>
+                    </a>
                 </td>
             </tr>
             `;
@@ -158,3 +161,33 @@ const openDelete = async (id) => {
         }
     }
 }
+
+const openChart = async (id) => {
+    const FORM = new FormData();
+    FORM.append('idGenero', id);
+
+    const DATA = await fetchData(GENERO_API, 'getTopLibrosPorGenero', FORM);
+
+    if (DATA.status) {
+        if (DATA.dataset.length === 0) {
+            sweetAlert(2, DATA.message || 'No hay libros vendidos para este género', false);
+            return;
+        }
+
+        AbrirModalGrafica();
+
+        let titulos = [];
+        let totalVentas = [];
+
+        DATA.dataset.forEach(row => {
+            titulos.push(row.titulo);
+            totalVentas.push(parseInt(row.total_ventas));
+        });
+
+        document.getElementById('chartContainer').innerHTML = `<canvas id="chart"></canvas>`;
+
+        barGraph('chart', titulos, totalVentas, 'Cantidad de ventas', '');
+    } else {
+        sweetAlert(4, DATA.error, true);
+    }
+};

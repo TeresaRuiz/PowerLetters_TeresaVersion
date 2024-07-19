@@ -105,4 +105,17 @@ class GeneroHandler
         // Ejecutar la consulta y devolver el resultado
         return Database::executeRow($sql, $params);
     }
+
+    public function getTopLibrosPorGenero()
+    {
+        $sql = 'SELECT l.titulo, COUNT(d.id_libro) as total_ventas
+            FROM tb_libros l
+            LEFT JOIN tb_detalle_pedidos d ON l.id_libro = d.id_libro
+            WHERE l.id_genero = ?
+            GROUP BY l.id_libro
+            ORDER BY total_ventas DESC
+            LIMIT 5';
+        $params = array($this->id);
+        return Database::getRows($sql, $params);
+    }
 }

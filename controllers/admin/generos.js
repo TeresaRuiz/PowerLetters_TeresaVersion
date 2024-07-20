@@ -75,6 +75,11 @@ const fillTable = async (form = null) => {
             TABLE_BODY.innerHTML += `
             <tr>
                 <td>${row.nombre}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td class="action-icons">
                     <a onclick="openUpdate(${row.id_genero})">
                         <i class="ri-edit-line"></i>

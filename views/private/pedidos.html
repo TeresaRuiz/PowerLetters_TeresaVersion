@@ -59,10 +59,8 @@
                         <td colspan="2" id="rowsFound"></td>
                     </tr>
                     <tr>
-                        <th>Fecha de pedido</th>
-                        <th>Dirección de pedido</th>
                         <th>Cliente</th>
-                        <th>Estado</th>
+                        <th>Último pedido</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -166,7 +164,7 @@
                 <span onclick="CerrarModalGrafica()" class="close"
                     style="font-size: 40px; font-weight: bold;">&times;</span>
                 <div class="card-body">
-                    <h2 id="chartTitle">Evolución de pedidos por estado</h2>
+                    <h2 id="chartTitle">Distribución de pedidos por estado para el usuario</h2>
                     <br>
                     <!-- Contenedor para mostrar el gráfico -->
                     <div id="chartContainer"></div>
@@ -177,6 +175,33 @@
                 </div>
             </div>
         </div>
+
+            <!-- Nuevo modal para mostrar los pedidos del usuario -->
+        <div id="modalPedidosUsuario" class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-content card">
+                <span onclick="CerrarModalPedidosUsuario()" class="close" style="font-size: 40px; font-weight: bold;">&times;</span>
+                <input type="number" id="usuario" name="usuario" style=" display: none;">
+                <div class="card-body">
+                    <h2>Pedidos del usuario</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Fecha de pedido</th>
+                                <th>Dirección de pedido</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pedidosUsuarioBody">
+                            
+                            <!-- Aquí se insertarán los pedidos dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
 
 
     </main>

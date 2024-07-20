@@ -18,6 +18,8 @@ const SAVE_FORM = document.getElementById('saveForm'),
 document.addEventListener('DOMContentLoaded', () => {
     // Llamada a la función para llenar la tabla con los registros existentes.
     fillTable();
+    // Llamada a la función para llenar el select de usuarios únicos.
+    fillUniqueUsers();
 });
 
 // Método del evento para cuando se envía el formulario de buscar.
@@ -58,32 +60,23 @@ const fillTable = async (form = null) => {
     ROWS_FOUND.textContent = '';
     TABLE_BODY.innerHTML = '';
     // Se verifica la acción a realizar.
-    (form) ? action = 'searchRows' : action = 'readAll';
+    (form) ? action = 'searchRows' : action = 'readAllUniqueUsers';
     // Petición para obtener los registros disponibles.
     const DATA = await fetchData(PEDIDO_API, action, form);
     // Se comprueba si la respuesta es satisfactoria, de lo contrario se muestra un mensaje con la excepción.
     if (DATA.status) {
         // Se recorre el conjunto de registros fila por fila.
-        DATA.dataset.forEach(row => {
+        DATA.dataset.forEach(user => {
             // Se crean y concatenan las filas de la tabla con los datos de cada registro.
             TABLE_BODY.innerHTML += `
             <tr>
-                <td>${row.fecha_pedido}</td>
-                <td>${row.direccion_pedido}</td>
-                <td>${row.nombre_usuario}</td>
-                <td>
-                    <div>
-                        ${row.estado}
-                    </div>
-                </td>
+                <td>${user.nombre_usuario}</td>
+                <td>${user.ultima_fecha_pedido}</td>
                 <td class="action-icons">
-                    <a onclick="viewDetails(${row.id_pedido})">
+                    <a onclick="viewUserPedidos(${user.id_usuario})">
                     <i class="ri-eye-fill"></i>
                     </a>
-                    <a onclick="openUpdate(${row.id_pedido})">
-                    <i class="ri-edit-line"></i>
-                    </a>
-                    <a onclick="openChart(${row.id_pedido})">
+                     <a onclick="openChart(${user.id_usuario})">
                     <i class="ri-line-chart-line"></i>
                     </a>
                 </td>
@@ -95,7 +88,72 @@ const fillTable = async (form = null) => {
     } else {
         sweetAlert(4, DATA.error, true);
     }
+}
+const viewUserPedidos = async (id) => {
+    const FORM = new FormData();
+    FORM.append('usuario', id);
+    const DATA = await fetchData(PEDIDO_API, 'readPedidosByUser', FORM);
 
+    if (DATA.status) {
+        let pedidosHTML = '';
+        DATA.dataset.forEach(pedido => {
+            pedidosHTML += `
+            <tr>
+                <td>${pedido.fecha_pedido}</td>
+                <td>${pedido.direccion_pedido}</td>
+                <td>${pedido.estado}</td>
+                <td class="action-icons">
+                    <a onclick="handleViewDetails(${pedido.id_pedido})">
+                        <i class="ri-eye-fill"></i>
+                    </a>
+                    <a onclick="handleOpenUpdate(${pedido.id_pedido})">
+                        <i class="ri-edit-line"></i>
+                    </a>
+                </td>
+            </tr>
+            `;
+        });
+        document.getElementById('pedidosUsuarioBody').innerHTML = pedidosHTML;
+        AbrirModalPedido();
+    } else {
+        sweetAlert(2, DATA.error, false);
+    }
+}
+
+const handleViewDetails = (id) => {
+    CerrarModalPedidosUsuario();
+    viewDetails(id);
+}
+
+const handleOpenUpdate = (id) => {
+    CerrarModalPedidosUsuario();
+    openUpdate(id);
+}
+
+const viewDetails = async (id) => {
+    // Se define una constante tipo objeto con los datos del registro seleccionado.
+    const FORM = new FormData();
+    FORM.append('id_pedido', id);
+    // Petición para obtener los datos del registro solicitado.
+    const DATA = await fetchData(PEDIDO_API, 'readOne', FORM);
+    // Se comprueba si la respuesta es satisfactoria, de lo contrario se muestra un mensaje con la excepción.
+    if (DATA.status) {
+        // Se inicializan los campos con los datos.
+        const ROW = DATA.dataset;
+        AbrirModalVista();
+        MODAL_TITLE.textContent = 'Detalle del pedido';
+        // Actualizar los elementos del modal con la información del libro
+        document.getElementById('tituloVista').innerText = ROW.titulo;
+        document.getElementById('vista').src = `${SERVER_URL}images/libros/${ROW.imagen_libro}`;
+        document.getElementById('Cantidad').innerText = ROW.cantidad;
+        document.getElementById('Comentario').innerText = ROW.comentario;
+        document.getElementById('Cliente').innerText = ROW.nombre_usuario;
+        document.getElementById('direccionPedido').innerText = ROW.direccion_pedido;
+        document.getElementById('Estado').innerText = ROW.estado;
+        document.getElementById('Fecha').innerText = ROW.fecha_pedido;
+    } else {
+        sweetAlert(2, DATA.error, false);
+    }
 }
 
 const openUpdate = async (id) => {
@@ -125,36 +183,12 @@ const openUpdate = async (id) => {
     }
 }
 
-const viewDetails = async (id) => {
-    // Se define una constante tipo objeto con los datos del registro seleccionado.
-    const FORM = new FormData();
-    FORM.append('id_pedido', id);
-    // Petición para obtener los datos del registro solicitado.
-    const DATA = await fetchData(PEDIDO_API, 'readOne', FORM);
-    // Se comprueba si la respuesta es satisfactoria, de lo contrario se muestra un mensaje con la excepción.
-    if (DATA.status) {
-        // Se inicializan los campos con los datos.
-        const ROW = DATA.dataset;
-        AbrirModalVista();
-        MODAL_TITLE.textContent = 'Detalle del pedido';
-        // Actualizar los elementos del modal con la información del libro
-        document.getElementById('tituloVista').innerText = ROW.titulo;
-        document.getElementById('vista').src = `${SERVER_URL}images/libros/${ROW.imagen_libro}`;
-        document.getElementById('Cantidad').innerText = ROW.cantidad;
-        document.getElementById('Comentario').innerText = ROW.comentario;
-        document.getElementById('Cliente').innerText = ROW.nombre_usuario;
-        document.getElementById('direccionPedido').innerText = ROW.direccion_pedido;
-        document.getElementById('Estado').innerText = ROW.estado;
-        document.getElementById('Fecha').innerText = ROW.fecha_pedido;
-    } else {
-        sweetAlert(2, DATA.error, false);
-    }
-}
+
 
 const openChart = async (id) => {
     // Se define una constante tipo objeto con los datos del registro seleccionado.
     const FORM = new FormData();
-    FORM.append('idPedido', id);
+    FORM.append('usuario', id);
 
     // Petición para obtener los datos del registro solicitado.
     const DATA = await fetchData(PEDIDO_API, 'readEvolucionPedidosPorEstado', FORM);
@@ -185,7 +219,6 @@ const openChart = async (id) => {
     }
 };
 
-
 const openVentasPorPeriodoReport = () => {
     // Obtener las fechas del formulario
     const fechaInicio = document.getElementById('fechaInicio').value;
@@ -210,4 +243,3 @@ const openPedidosPendientesReport = () => {
     const PATH = new URL(`${SERVER_URL}reports/admin/reporte_pedidos_pendientes.php`);
     window.open(PATH.href);
 }
-

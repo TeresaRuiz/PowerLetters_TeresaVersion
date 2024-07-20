@@ -109,12 +109,33 @@ if (isset($_GET['action'])) {
                 break;
 
             case 'readEvolucionPedidosPorEstado':
-                if (!$pedido->setId($_POST['idPedido'])) {
+                if (!$pedido->setIdUsuario($_POST['usuario'])) {
                     $result['error'] = $pedido->getDataError();
-                } elseif ($result['dataset'] = $pedido->readEvolucionPedidosPorEstado()) {
+                } elseif ($result['dataset'] = $pedido->readEvolucionPedidosPorEstadoPorUsuario()) {
                     $result['status'] = 1;
                 } else {
                     $result['error'] = 'No existen estados para los pedidos por el momento';
+                }
+                break;
+            case 'readAllUniqueUsers':
+                // Obtener todos los usuarios únicos que han hecho pedidos
+                if ($result['dataset'] = $pedido->readAllUniqueUsers()) {
+                    $result['status'] = 1;
+                    $result['message'] = 'Se encontraron ' . count($result['dataset']) . ' usuarios únicos';
+                } else {
+                    $result['error'] = 'No se encontraron usuarios únicos';
+                }
+                break;
+
+            case 'readPedidosByUser':
+                // Obtener todos los pedidos de un usuario específico
+                if (!$pedido->setIdUsuario($_POST['usuario'])) {
+                    $result['error'] = $pedido->getDataError();
+                } elseif ($result['dataset'] = $pedido->readPedidosByUser()) {
+                    $result['status'] = 1;
+                    $result['message'] = 'Se encontraron ' . count($result['dataset']) . ' pedidos para el usuario';
+                } else {
+                    $result['error'] = 'No se encontraron pedidos para el usuario especificado';
                 }
                 break;
 

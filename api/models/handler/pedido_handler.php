@@ -326,16 +326,17 @@ class PedidoHandler
         return Database::getRows($sql);
     }
 
-    public function readEvolucionPedidosPorEstado()
+    public function readEvolucionPedidosPorEstadoPorUsuario()
     {
-        $sql = 'SELECT estado, COUNT(id_pedido) total_pedidos
-        FROM tb_pedidos
-        WHERE id_pedido = ?
-        GROUP BY estado
-        ORDER BY total_pedidos DESC';
-        $params = array($this->id);
+        $sql = 'SELECT estado, COUNT(id_pedido) AS total_pedidos
+                FROM tb_pedidos
+                WHERE id_usuario = ?
+                GROUP BY estado
+                ORDER BY total_pedidos DESC';
+        $params = array($this->id_usuario);
         return Database::getRows($sql, $params);
     }
+    
     public function ventasPorPeriodo()
     {
         $sql = 'SELECT p.fecha_pedido, u.nombre_usuario, u.apellido_usuario, 
@@ -446,5 +447,38 @@ class PedidoHandler
         return Database::getRows($sql, $params);
     }
 
+    public function readAllUniqueUsers()
+    {
+        $sql = 'SELECT DISTINCT
+                    u.id_usuario,
+                    u.nombre_usuario,
+                    (SELECT MAX(fecha_pedido) FROM tb_pedidos WHERE id_usuario = u.id_usuario) AS ultima_fecha_pedido
+                FROM
+                    tb_usuarios AS u
+                INNER JOIN
+                    tb_pedidos AS p ON u.id_usuario = p.id_usuario
+                ORDER BY
+                    ultima_fecha_pedido DESC';
 
+        return Database::getRows($sql);
+    }
+
+    // Método para obtener todos los pedidos de un usuario específico
+    public function readPedidosByUser()
+    {
+        $sql = 'SELECT
+                    p.id_pedido,
+                    p.direccion_pedido,
+                    p.estado,
+                    p.fecha_pedido
+                FROM
+                    tb_pedidos AS p
+                WHERE
+                    p.id_usuario = ?
+                ORDER BY
+                    p.fecha_pedido DESC';
+
+        $params = array($this->id_usuario);
+        return Database::getRows($sql, $params);
+    }
 }

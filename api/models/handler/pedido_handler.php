@@ -106,6 +106,7 @@ class PedidoHandler
     }
 
     // Método para leer el historial de pedidos finalizados
+
     public function readHistorial($idUsuario)
     {
         $sql = 'SELECT p.id_pedido, p.fecha_pedido, p.direccion_pedido, p.estado, 
@@ -114,7 +115,7 @@ class PedidoHandler
             FROM tb_pedidos AS p
             INNER JOIN tb_detalle_pedidos AS dp ON p.id_pedido = dp.id_pedido
             INNER JOIN tb_libros AS l ON dp.id_libro = l.id_libro
-            WHERE p.id_usuario = ? AND p.estado = "FINALIZADO"
+            WHERE p.id_usuario = ? AND p.estado IN ("FINALIZADO", "ENTREGADO")
             ORDER BY p.fecha_pedido DESC';
         $params = array($idUsuario);
         return Database::getRows($sql, $params);
@@ -317,7 +318,8 @@ class PedidoHandler
         return Database::executeRow($sql, $params);
     }
 
-    public function readDistribucionPedidosPorEstado() {
+    public function readDistribucionPedidosPorEstado()
+    {
         $sql = 'SELECT estado, COUNT(id_pedido) AS cantidad
                 FROM tb_pedidos
                 GROUP BY estado';
@@ -331,8 +333,8 @@ class PedidoHandler
         WHERE id_pedido = ?
         GROUP BY estado
         ORDER BY total_pedidos DESC';
-    $params = array($this->id);
-    return Database::getRows($sql, $params);
+        $params = array($this->id);
+        return Database::getRows($sql, $params);
     }
     public function ventasPorPeriodo()
     {

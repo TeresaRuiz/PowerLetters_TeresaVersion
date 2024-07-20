@@ -18,11 +18,11 @@ $pdf->cell(0, 10, 'Valor total de pedidos pendientes: $' . number_format($totale
 $pdf->ln(10);
 
 $pdf->setFont('Arial', 'B', 11);
-$pdf->setFillColor(225);
+$pdf->setFillColor(225); // Color gris claro
 $pdf->cell(25, 10, 'ID Pedido', 1, 0, 'C', 1);
 $pdf->cell(35, 10, 'Fecha', 1, 0, 'C', 1);
 $pdf->cell(50, 10, 'Cliente', 1, 0, 'C', 1);
-$pdf->cell(50, 10, 'Dirección', 1, 0, 'C', 1);
+$pdf->cell(50, 10,  $pdf->encodeString('Dirección'), 1, 0, 'C', 1); // Dirección con acento
 $pdf->cell(30, 10, 'Total', 1, 1, 'C', 1);
 
 $pdf->setFont('Arial', '', 10);
@@ -35,3 +35,4 @@ foreach ($pedidosPendientes as $pedido) {
 }
 
 $pdf->output('I', 'reporte_pedidos_pendientes.pdf');
+?>

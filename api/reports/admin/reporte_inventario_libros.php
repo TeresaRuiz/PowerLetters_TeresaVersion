@@ -33,7 +33,13 @@ foreach ($libros as $libro) {
     $pdf->setFont($existenciasBajas ? 'Arial' : '', $existenciasBajas ? 'B' : '');
     $pdf->setTextColor($existenciasBajas ? 255 : 0, 0, 0);
     
-    $pdf->cell(70, 10, $pdf->encodeString($libro['titulo_libro']), 1, 0);
+    // Ajuste automático del texto para el título
+    $pdf->MultiCell(70, 10, $pdf->encodeString($libro['titulo_libro']), 1);
+    
+    // Posiciona la siguiente celda en la misma línea
+    $pdf->SetXY($pdf->GetX() + 70, $pdf->GetY() - 10);
+    
+    // Información de autor, género, existencias y precio
     $pdf->cell(40, 10, $pdf->encodeString($libro['nombre_autor']), 1, 0);
     $pdf->cell(30, 10, $pdf->encodeString($libro['nombre_genero']), 1, 0);
     $pdf->cell(25, 10, $pdf->encodeString($libro['existencias']), 1, 0, 'C');

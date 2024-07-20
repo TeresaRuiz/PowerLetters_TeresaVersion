@@ -245,3 +245,66 @@ color: var(--text-color);
   display: flex;
   align-items: center;
 }
+
+/* Estilos para el contenedor del formulario de reporte */
+.reporte-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 20px;
+}
+
+.search-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.reporte-button {
+  padding: 7px 15px; /* Espaciado interno */
+  background-color: var(--first-color); /* Color de fondo */
+  color: var(--white-color); /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  cursor: pointer; /* Cursor de puntero */
+  transition: background-color 0.3s; /* Transición suave para el fondo */
+  font-size: 0.9rem; /* Tamaño de la fuente */
+  margin-top: 10px;
+}
+
+.reporte-button:hover {
+  background-color: #218838; /* Color de fondo al pasar el cursor */
+}
+
+.reporte-form {
+  background-color: var(--container-color); /* Ajusta el color de fondo */
+  border: 2px solid var(--border-color); /* Borde sólido */
+  border-radius: 8px; /* Bordes redondeados */
+  padding: 15px; /* Espaciado interno */
+  margin-top: 10px; /* Margen superior */
+  max-width: 300px; /* Ancho máximo del formulario */
+  display: none; /* Ocultar el formulario por defecto */
+}
+
+.form-group {
+  margin-bottom: 10px; /* Espaciado inferior entre grupos de formulario */
+}
+
+.reporte-form label {
+  display: block; /* Asegura que la etiqueta ocupe toda la línea */
+  margin-bottom: 3px; /* Espaciado inferior */
+  color: var(--title-color); /* Color del texto */
+  font-weight: var(--font-medium); /* Peso de la fuente */
+  font-size: 0.9rem; /* Tamaño de la fuente */
+}
+
+.reporte-input {
+  width: 100%; /* Ancho completo */
+  padding: 5px; /* Espaciado interno */
+  border: 1px solid var(--border-color); /* Borde sólido */
+  border-radius: 5px; /* Bordes redondeados */
+  background-color: var(--container-color); /* Color de fondo */
+  color: var(--text-color); /* Color del texto */
+  font-size: 0.9rem; /* Tamaño de la fuente */
+}

@@ -36,3 +36,12 @@ function closeModalDetalles() {
 function CerrarModalGrafica() {
     modalGrafica.style.display = "none";
 }
+
+document.getElementById('toggleReporteForm').addEventListener('click', function() {
+    var form = document.getElementById('reporteVentasForm');
+    if (form.style.display === 'none') {
+        form.style.display = 'block';
+    } else {
+        form.style.display = 'none';
+    }
+});

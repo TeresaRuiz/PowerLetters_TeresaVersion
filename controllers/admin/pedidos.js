@@ -206,3 +206,8 @@ const openVentasPorPeriodoReport = () => {
     window.open(PATH.href);
 }
 
+const openPedidosPendientesReport = () => {
+    const PATH = new URL(`${SERVER_URL}reports/admin/reporte_pedidos_pendientes.php`);
+    window.open(PATH.href);
+}
+

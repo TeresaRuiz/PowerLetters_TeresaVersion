@@ -375,4 +375,42 @@ class PedidoHandler
         $params = array($this->fechaInicio, $this->fechaFin);
         return Database::getRows($sql, $params);
     }
+
+    public function obtenerPedidosPendientes()
+    {
+        $sql = 'SELECT 
+            p.id_pedido,
+            p.fecha_pedido,
+            u.nombre_usuario,
+            u.apellido_usuario,
+            p.direccion_pedido,
+            SUM(dp.cantidad * dp.precio) AS total_pedido
+        FROM 
+            tb_pedidos p
+        INNER JOIN 
+            tb_usuarios u ON p.id_usuario = u.id_usuario
+        INNER JOIN 
+            tb_detalle_pedidos dp ON p.id_pedido = dp.id_pedido
+        WHERE 
+            p.estado = "PENDIENTE"
+        GROUP BY 
+            p.id_pedido
+        ORDER BY 
+            p.fecha_pedido DESC';
+        return Database::getRows($sql);
+    }
+
+    public function obtenerTotalPedidosPendientes()
+    {
+        $sql = 'SELECT 
+            COUNT(DISTINCT p.id_pedido) AS total_pedidos,
+            SUM(dp.cantidad * dp.precio) AS valor_total_pendiente
+        FROM 
+            tb_pedidos p
+        INNER JOIN 
+            tb_detalle_pedidos dp ON p.id_pedido = dp.id_pedido
+        WHERE 
+            p.estado = "PENDIENTE"';
+        return Database::getRow($sql);
+    }
 }

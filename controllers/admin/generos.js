@@ -163,29 +163,33 @@ const openDelete = async (id) => {
 }
 
 const openChart = async (id) => {
+    // Se define una constante tipo objeto con los datos del registro seleccionado.
     const FORM = new FormData();
     FORM.append('idGenero', id);
 
+    // Petición para obtener los datos del registro solicitado.
     const DATA = await fetchData(GENERO_API, 'getTopLibrosPorGenero', FORM);
 
+    // Se comprueba si la respuesta es satisfactoria, de lo contrario se muestra un mensaje con el error.
     if (DATA.status) {
-        if (DATA.dataset.length === 0) {
-            sweetAlert(2, DATA.message || 'No hay libros vendidos para este género', false);
-            return;
-        }
-
+        // Abre el modal para mostrar la gráfica.
         AbrirModalGrafica();
 
+        // Declara los arreglos para guardar los datos a graficar.
         let titulos = [];
         let totalVentas = [];
 
+        // Recorre el conjunto de registros fila por fila a través del objeto row.
         DATA.dataset.forEach(row => {
+            // Agrega los datos a los arreglos.
             titulos.push(row.titulo);
-            totalVentas.push(parseInt(row.total_ventas));
+            totalVentas.push(row.total_ventas);
         });
 
+        // Agrega la etiqueta canvas al contenedor de la modal.
         document.getElementById('chartContainer').innerHTML = `<canvas id="chart"></canvas>`;
 
+        // Llama a la función para generar y mostrar un gráfico de barras.
         barGraph('chart', titulos, totalVentas, 'Cantidad de ventas', '');
     } else {
         sweetAlert(4, DATA.error, true);

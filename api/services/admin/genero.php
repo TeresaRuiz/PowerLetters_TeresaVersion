@@ -107,11 +107,8 @@ if (isset($_GET['action'])) {
                     $result['error'] = $genero->getDataError();
                 } elseif ($result['dataset'] = $genero->getTopLibrosPorGenero()) {
                     $result['status'] = 1;
-                    if (empty($result['dataset'])) {
-                        $result['message'] = 'No hay libros vendidos para este género';
-                    }
                 } else {
-                    $result['error'] = 'Ocurrió un error al obtener los datos';
+                    $result['error'] = 'No existen libros vendidos por el momento';
                 }
                 break;
 

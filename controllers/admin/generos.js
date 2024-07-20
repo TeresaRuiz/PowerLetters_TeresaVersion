@@ -85,6 +85,9 @@ const fillTable = async (form = null) => {
                     <a onclick="openChart(${row.id_genero})">
                     <i class="ri-line-chart-line"></i>
                     </a>
+                     <a onclick="openReport(${row.id_genero})">
+                    <i class="ri-file-pdf-2-fill"></i>
+                    </a>
                 </td>
             </tr>
             `;
@@ -195,3 +198,17 @@ const openChart = async (id) => {
         sweetAlert(4, DATA.error, true);
     }
 };
+
+/*
+*   Función para abrir un reporte parametrizado.
+*   Parámetros: id (identificador del registro seleccionado).
+*   Retorno: ninguno.
+*/
+const openReport = (id) => {
+    // Se declara una constante tipo objeto con la ruta específica del reporte en el servidor.
+    const PATH = new URL(`${SERVER_URL}reports/admin/libros_generos.php`);
+    // Se agrega un parámetro a la ruta con el valor del registro seleccionado.
+    PATH.searchParams.append('idGenero', id);
+    // Se abre el reporte en una nueva pestaña.
+    window.open(PATH.href);
+}

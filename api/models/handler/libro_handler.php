@@ -227,4 +227,16 @@ class LibroHandler
         $params = null;
         return Database::getRows($sql, $params);
     }
+    //Metódo para generar reportes
+    public function librosDeGenero()
+    {
+        $sql = 'SELECT l.titulo, a.nombre AS nombre_autor, l.precio, l.existencias
+        FROM tb_libros l
+        INNER JOIN tb_autores a ON l.id_autor = a.id_autor  
+        INNER JOIN tb_generos g ON l.id_genero = g.id_genero
+        WHERE g.id_genero = ?
+        ORDER BY l.titulo';
+        $params = array($this->genero);
+        return Database::getRows($sql, $params);
+    }
 }

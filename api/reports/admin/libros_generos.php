@@ -20,7 +20,7 @@ if (isset($_GET['idGenero'])) {
         // Se verifica si el género existe, de lo contrario se muestra un mensaje.
         if ($rowGenero = $generos->readOne()) {
             // Se inicia el reporte con el encabezado del documento.
-            $pdf->startReport('Libros del género ' . $rowGenero['nombre']);
+            $pdf->startReport('Listado de libros en el género ' . $rowGenero['nombre']);
             
             // Se verifica si existen registros para mostrar, de lo contrario se imprime un mensaje.
             if ($dataLibros = $libros->librosDeGenero()) {

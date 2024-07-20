@@ -13,7 +13,7 @@ class Report extends FPDF
         if (isset($_SESSION['idAdministrador'])) {
             $this->title = $title;
             $this->setTitle('Power Letters - Reporte', true);
-            $this->setMargins(15, 15, 15);
+            $this->setMargins(10, 15, 15);
             $this->addPage('p', 'letter');
             $this->aliasNbPages();
             

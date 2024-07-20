@@ -415,4 +415,37 @@ class PedidoHandler
             p.estado = "PENDIENTE"';
         return Database::getRow($sql);
     }
+
+    // Método para obtener los libros que se encuentran en el último pedido finalizado realizado.
+   // Método para obtener los productos del último pedido finalizado realizado por el usuario y los datos del usuario.
+public function readDetailReport()
+{
+    $sql = 'SELECT u.nombre_usuario AS NOMBRE_USUARIO,
+                u.apellido_usuario AS APELLIDO_USUARIO,
+                u.correo_usuario AS CORREO,
+                u.telefono_usuario AS TELEFONO,
+                u.direccion_usuario AS DIRECCION,
+                u.dui_usuario AS DUI,
+                dp.id_detalle AS ID,
+                l.imagen AS IMAGEN,
+                l.titulo AS NOMBRE,
+                dp.cantidad AS CANTIDAD,
+                dp.precio AS PRECIO,
+                ROUND(dp.precio * dp.cantidad, 2) AS TOTAL
+            FROM tb_detalle_pedidos dp
+            JOIN tb_libros l ON dp.id_libro = l.id_libro
+            JOIN tb_pedidos p ON dp.id_pedido = p.id_pedido
+            JOIN tb_usuarios u ON p.id_usuario = u.id_usuario
+            WHERE dp.id_pedido = (
+                SELECT id_pedido
+                FROM tb_pedidos
+                WHERE id_usuario = ? AND estado = "FINALIZADO"
+                ORDER BY id_pedido DESC
+                LIMIT 1
+            );';
+    $params = array($_SESSION['idUsuario']);
+    return Database::getRows($sql, $params);
+}
+
+
 }

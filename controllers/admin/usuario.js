@@ -124,3 +124,10 @@ const openUpdate = async (id) => {
         sweetAlert(2, DATA.exception, false);
     }
 }
+
+const openClientesFrecuentesReport = () => {
+    // Se declara una constante tipo objeto con la ruta específica del reporte en el servidor.
+    const PATH = new URL(`${SERVER_URL}reports/admin/clientes_frecuentes.php`);
+    // Se abre el reporte en una nueva pestaña.
+    window.open(PATH.href);
+}

@@ -218,4 +218,18 @@ class UsuarioHandler
         ORDER BY MIN(fecha_registro) ASC';
         return Database::getRows($sql);
     }
+
+    public function clientesFrecuentes()
+{
+    $sql = 'SELECT u.nombre_usuario, u.apellido_usuario, COUNT(p.id_pedido) AS total_pedidos,
+            SUM(dp.cantidad * dp.precio) AS monto_total
+            FROM tb_usuarios u
+            INNER JOIN tb_pedidos p ON u.id_usuario = p.id_usuario
+            INNER JOIN tb_detalle_pedidos dp ON p.id_pedido = dp.id_pedido
+            WHERE p.estado = "FINALIZADO"
+            GROUP BY u.id_usuario
+            ORDER BY total_pedidos DESC
+            LIMIT 10';
+    return Database::getRows($sql);
+}
 }

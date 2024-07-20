@@ -154,13 +154,14 @@ class UsuarioHandler
                 ORDER BY apellido_usuario';
         return Database::getRows($sql);
     }
+    
 
     /*
      *   Métodos para leer solo uno
      */
     public function readOne()
     {
-        $sql = 'SELECT id_usuario, nombre_usuario, apellido_usuario, correo_usuario, dui_usuario, telefono_usuario, nacimiento_usuario, direccion_usuario, estado_cliente, imagen
+        $sql = 'SELECT id_usuario, nombre_usuario, apellido_usuario, correo_usuario, dui_usuario, estado_cliente, imagen
                 FROM tb_usuarios
                 WHERE id_usuario = ?';
         $params = array($this->id);
@@ -173,9 +174,9 @@ class UsuarioHandler
     public function updateRow()
     {
         $sql = 'UPDATE tb_usuarios
-                SET nombre_usuario = ?, apellido_usuario = ?, dui_usuario = ?, estado_cliente = ?, telefono_usuario = ?, nacimiento_usuario = ?, direccion_usuario = ?, imagen = ?
+                SET estado_cliente = ?
                 WHERE id_usuario = ?';
-        $params = array($this->nombre, $this->apellido, $this->dui, $this->estado, $this->telefono, $this->nacimiento, $this->direccion, $this->id, $this->imagen);
+        $params = array($this->estado, $this->id);
         return Database::executeRow($sql, $params);
     }
 

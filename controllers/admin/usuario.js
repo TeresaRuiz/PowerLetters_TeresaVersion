@@ -78,12 +78,10 @@ const fillTable = async (form = null) => {
             <tr>
                 <td><img src="${SERVER_URL}images/usuarios/default.png" width="50"></td>
                 <td>${row.nombre_usuario}</td>
-                <td>${row.nombre_usuario}</td>
-                <td>${row.correo}</td>
-                <td>${row.direccion}</td>
-                <td>${row.telefono}</td>
+                <td>${row.apellido_usuario}</td>
+                <td>${row.dui_usuario}</td>
+                <td>${row.correo_usuario}</td>
                 <td>${estadoIcono}</td>
-                <td>${row.fecha_registro}</td>
                 <td class="action-icons">
                     <a onclick="openUpdate(${row.id_usuario})">
                         <i class="ri-edit-line"></i>

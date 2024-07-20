@@ -57,7 +57,7 @@ if (isset($_GET['action'])) {
                 }
                 break;
             case 'readOne':
-                if (!$usuario->setId($_POST['idUsuario'])) {
+                if (!$usuario->setId($_POST['id_usuario'])) {
                     $result['error'] = 'Usuario incorrecto';
                 } elseif ($result['dataset'] = $usuario->readOne()) {
                     $result['status'] = 1;
@@ -68,15 +68,8 @@ if (isset($_GET['action'])) {
             case 'updateRow':
                 $_POST = Validator::validateForm($_POST);
                 if (
-                    !$usuario->setId($_POST['idUsuario']) or
-                    !$usuario->setNombre($_POST['nombre_usuario']) or
-                    !$usuario->setApellido($_POST['apellido_usuario']) or
-                    !$usuario->setCorreo($_POST['correo_usuario']) or
-                    !$usuario->setDireccion($_POST['direccion_usuario']) or
-                    !$usuario->setDUI($_POST['dui_usuario']) or
-                    !$usuario->setNacimiento($_POST['nacimiento_usuario']) or
-                    !$usuario->setTelefono($_POST['telefono_usuario']) or
-                    !$usuario->setImagen($_FILES['imagen'])
+                    !$usuario->setId($_POST['id_usuario']) or
+                    !$usuario->setEstado($_POST['estado_cliente'])
                 ) {
                     $result['error'] = $usuario->getDataError();
                 } elseif ($usuario->updateRow()) {

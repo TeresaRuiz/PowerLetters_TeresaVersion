@@ -185,3 +185,24 @@ const openChart = async (id) => {
     }
 };
 
+
+const openVentasPorPeriodoReport = () => {
+    // Obtener las fechas del formulario
+    const fechaInicio = document.getElementById('fechaInicio').value;
+    const fechaFin = document.getElementById('fechaFin').value;
+
+    // Validar que ambas fechas estén seleccionadas
+    if (!fechaInicio || !fechaFin) {
+        alert('Por favor, seleccione ambas fechas.');
+        return;
+    }
+
+    // Se declara una constante tipo objeto con la ruta específica del reporte en el servidor.
+    const PATH = new URL(`${SERVER_URL}reports/admin/ventas_por_periodo.php`);
+    // Se agregan los parámetros a la ruta con los valores de las fechas.
+    PATH.searchParams.append('fechaInicio', fechaInicio);
+    PATH.searchParams.append('fechaFin', fechaFin);
+    // Se abre el reporte en una nueva pestaña.
+    window.open(PATH.href);
+}
+

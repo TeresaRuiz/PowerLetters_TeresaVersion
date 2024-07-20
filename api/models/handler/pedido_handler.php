@@ -15,6 +15,9 @@ class PedidoHandler
     protected $direccion = null;
     protected $estado = null;
     protected $fecha = null;
+
+    protected $fechaInicio = null;
+    protected $fechaFin = null;
     protected $libro = null;
     protected $cantidad = null;
     protected $id_detalle = null;
@@ -330,5 +333,46 @@ class PedidoHandler
         ORDER BY total_pedidos DESC';
     $params = array($this->id);
     return Database::getRows($sql, $params);
+    }
+    public function ventasPorPeriodo()
+    {
+        $sql = 'SELECT p.fecha_pedido, u.nombre_usuario, u.apellido_usuario, 
+                SUM(dp.cantidad * dp.precio) AS total_venta
+                FROM tb_pedidos p
+                INNER JOIN tb_usuarios u ON p.id_usuario = u.id_usuario
+                INNER JOIN tb_detalle_pedidos dp ON p.id_pedido = dp.id_pedido
+                WHERE p.fecha_pedido BETWEEN ? AND ?
+                AND p.estado = "FINALIZADO"
+                GROUP BY p.id_pedido
+                ORDER BY p.fecha_pedido';
+        $params = array($this->fechaInicio, $this->fechaFin);
+        return Database::getRows($sql, $params);
+    }
+
+    public function totalVentasYPedidos()
+    {
+        $sql = 'SELECT COUNT(DISTINCT p.id_pedido) AS numero_pedidos,
+                SUM(dp.cantidad * dp.precio) AS total_ventas
+                FROM tb_pedidos p
+                INNER JOIN tb_detalle_pedidos dp ON p.id_pedido = dp.id_pedido
+                WHERE p.fecha_pedido BETWEEN ? AND ?
+                AND p.estado = "FINALIZADO"';
+        $params = array($this->fechaInicio, $this->fechaFin);
+        return Database::getRow($sql, $params);
+    }
+
+    public function librosMasVendidos()
+    {
+        $sql = 'SELECT l.titulo, SUM(dp.cantidad) AS total_vendido
+                FROM tb_libros l
+                INNER JOIN tb_detalle_pedidos dp ON l.id_libro = dp.id_libro
+                INNER JOIN tb_pedidos p ON dp.id_pedido = p.id_pedido
+                WHERE p.fecha_pedido BETWEEN ? AND ?
+                AND p.estado = "FINALIZADO"
+                GROUP BY l.id_libro
+                ORDER BY total_vendido DESC
+                LIMIT 5';
+        $params = array($this->fechaInicio, $this->fechaFin);
+        return Database::getRows($sql, $params);
     }
 }

@@ -14,9 +14,9 @@ class Report extends FPDF
             $this->title = $title;
             $this->setTitle('Power Letters - Reporte', true);
             $this->setMargins(10, 15, 15);
-            $this->addPage('p', 'letter');
+            $this->addPage('P', 'Letter');
             $this->aliasNbPages();
-            
+
             // Aplicamos el color de fondo después de añadir la página
             $this->setFillColor(235, 238, 255); // #ebeeff
             $this->rect(0, 0, $this->getPageWidth(), $this->getPageHeight(), 'F');
@@ -30,7 +30,7 @@ class Report extends FPDF
 
     public function encodeString($string)
     {
-        return mb_convert_encoding($string, 'ISO-8859-1', 'utf-8');
+        return iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $string);
     }
 
     public function header()
@@ -55,13 +55,10 @@ class Report extends FPDF
         
         // Fecha/Hora y Usuario
         $this->setFont('Arial', '', 10);
-        $this->cell(0, 10, 'Fecha/Hora: ' . date('d-m-Y H:i:s'), 0, 1, 'R');
+        $this->cell(0, 10, $this->encodeString('Fecha/Hora: ' . date('d-m-Y H:i:s')), 0, 1, 'R');
         if (isset($_SESSION['nombreUsuario'])) {
-            $this->cell(0, 10, 'Usuario: ' . $_SESSION['nombreUsuario'], 0, 1, 'R');
+            $this->cell(0, 10, $this->encodeString('Usuario: ' . $_SESSION['nombreUsuario']), 0, 1, 'R');
         }
-        
-        // Línea separadora
-        //$this->line(10, 50, $this->getPageWidth()-10, 60);
         
         // Restablecemos el color de relleno
         $this->setFillColor(235, 238, 255); // #ebeeff

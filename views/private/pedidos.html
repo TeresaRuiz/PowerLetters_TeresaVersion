@@ -29,6 +29,16 @@
                     <button class="search-button" type="submit"><i class="ri-search-line"></i></button>
                 </div>
             </form>
+
+            <form id="reporteVentasForm">
+                <label for="fechaInicio">Fecha de inicio:</label>
+                <input type="date" id="fechaInicio" required>
+                
+                <label for="fechaFin">Fecha de fin:</label>
+                <input type="date" id="fechaFin" required>
+                
+                <button type="button" onclick="openVentasPorPeriodoReport()">Generar Reporte</button>
+            </form>
             <!-- Tabla con estilo elegante -->
             <table class="table">
                 <thead>

@@ -85,6 +85,26 @@ class PedidoData extends PedidoHandler
         }
     }
 
+    public function setFechaInicio($fecha)
+    {
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
+            $this->fechaInicio = $fecha;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function setFechaFin($fecha)
+    {
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
+            $this->fechaFin = $fecha;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function setIdDetalle($value)
     {
         // Valida que el identificador del detalle sea un número natural.

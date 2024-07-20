@@ -179,7 +179,7 @@ const openChart = async (id) => {
         document.getElementById('chartContainer').innerHTML = `<canvas id="chart"></canvas>`;
 
         // Llama a la función para generar y mostrar un gráfico de barras.
-        barGraph('chart', estados, totalPedidos, 'Cantidad de pedidos', 'Evolución de pedidos por estado');
+        barGraph('chart', estados, totalPedidos, 'Cantidad de pedidos', '');
     } else {
         sweetAlert(4, DATA.error, true);
     }

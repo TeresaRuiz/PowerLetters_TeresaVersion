@@ -416,11 +416,10 @@ class PedidoHandler
         return Database::getRow($sql);
     }
 
-    // Método para obtener los libros que se encuentran en el último pedido finalizado realizado.
-   // Método para obtener los productos del último pedido finalizado realizado por el usuario y los datos del usuario.
-public function readDetailReport()
-{
-    $sql = 'SELECT u.nombre_usuario AS NOMBRE_USUARIO,
+    // Método para obtener los productos del último pedido finalizado realizado por el usuario y los datos del usuario.
+    public function readDetailReport()
+    {
+        $sql = 'SELECT u.nombre_usuario AS NOMBRE_USUARIO,
                 u.apellido_usuario AS APELLIDO_USUARIO,
                 u.correo_usuario AS CORREO,
                 u.telefono_usuario AS TELEFONO,
@@ -443,9 +442,9 @@ public function readDetailReport()
                 ORDER BY id_pedido DESC
                 LIMIT 1
             );';
-    $params = array($_SESSION['idUsuario']);
-    return Database::getRows($sql, $params);
-}
+        $params = array($_SESSION['idUsuario']);
+        return Database::getRows($sql, $params);
+    }
 
 
 }

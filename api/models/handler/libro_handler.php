@@ -239,4 +239,35 @@ class LibroHandler
         $params = array($this->genero);
         return Database::getRows($sql, $params);
     }
+
+    public function obtenerInventario()
+    {
+        $sql = 'SELECT
+            l.id_libro,
+            l.titulo AS titulo_libro,
+            a.nombre AS nombre_autor,
+            g.nombre AS nombre_genero,
+            e.nombre AS nombre_editorial,
+            l.existencias,
+            l.precio
+        FROM
+            tb_libros AS l
+        INNER JOIN
+            tb_autores AS a ON l.id_autor = a.id_autor
+        INNER JOIN
+            tb_editoriales AS e ON l.id_editorial = e.id_editorial
+        INNER JOIN
+            tb_generos AS g ON l.id_genero = g.id_genero
+        ORDER BY l.existencias ASC';
+        return Database::getRows($sql);
+    }
+
+    public function obtenerTotalLibros()
+    {
+        $sql = 'SELECT COUNT(*) AS total_libros, 
+                SUM(existencias) AS total_existencias,
+                SUM(existencias * precio) AS valor_inventario
+                FROM tb_libros';
+        return Database::getRow($sql);
+    }
 }

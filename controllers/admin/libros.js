@@ -205,3 +205,7 @@ const openDelete = async (id) => {
     }
 }
 
+const openInventarioReport = () => {
+    const PATH = new URL(`${SERVER_URL}reports/admin/reporte_inventario_libros.php`);
+    window.open(PATH.href);
+}

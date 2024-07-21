@@ -1,6 +1,9 @@
 <?php
 // Se incluye la clase para generar archivos PDF.
-require_once ('../../libraries/fpdf185/fpdf.php');
+require_once('../../libraries/fpdf185/fpdf.php');
+
+// Se incluye la clase Database para acceder a la base de datos.
+require_once('../../helpers/database.php');
 
 class Report extends FPDF
 {
@@ -56,8 +59,11 @@ class Report extends FPDF
         // Fecha/Hora y Usuario
         $this->setFont('Arial', '', 10);
         $this->cell(0, 10, $this->encodeString('Fecha/Hora: ' . date('d-m-Y H:i:s')), 0, 1, 'R');
-        if (isset($_SESSION['nombreUsuario'])) {
-            $this->cell(0, 10, $this->encodeString('Usuario: ' . $_SESSION['nombreUsuario']), 0, 1, 'R');
+
+        // Obtener el nombre del administrador desde la base de datos
+        $adminName = $this->getAdminName();
+        if ($adminName) {
+            $this->cell(0, 10, $this->encodeString('Administrador: ' . $adminName), 0, 1, 'R');
         }
         
         // Restablecemos el color de relleno
@@ -86,5 +92,18 @@ class Report extends FPDF
         
         $this->setTextColor(0); // Restablecer el color del texto a negro
         $this->setFont('Arial', '', 11);
+    }
+
+    private function getAdminName()
+    {
+        $idAdministrador = $_SESSION['idAdministrador'];
+        $query = "SELECT nombre_administrador, apellido_administrador FROM administrador WHERE id_administrador = ?";
+        $result = Database::getRow($query, [$idAdministrador]);
+        
+        if ($result) {
+            return $result['nombre_administrador'] . ' ' . $result['apellido_administrador'];
+        } else {
+            return null;
+        }
     }
 }

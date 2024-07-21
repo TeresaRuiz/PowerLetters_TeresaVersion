@@ -31,6 +31,9 @@
                     <a href="javascript:void(0);" onclick="openClientesFrecuentesReport()" class="report-link">
                         <i class="ri-file-pdf-2-fill"></i>
                     </a>
+                    <a onclick="openChart()">
+                        <i class="ri-line-chart-line"></i>
+                        </a>
                 </div>
             </form>
 
@@ -80,6 +83,25 @@
             </div>
         </div>
 
+        <!-- Modal de la vista con gráfico -->
+        <div id="chartModal" class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-content card">
+                <span onclick="CerrarModalGrafica()" class="close"
+                    style="font-size: 40px; font-weight: bold;">&times;</span>
+                <div class="card-body">
+                    <h2 id="chartTitle">Gráfica de estados de los usuarios</h2>
+                    <br>
+                    <!-- Contenedor para mostrar el gráfico -->
+                    <div id="chartContainer"></div>
+                    <div class="modal-footer">
+                        <br><br><br>
+                        <button type="submit"  class="genero__button button" onclick="CerrarModalGrafica()">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
     </main>
 
@@ -91,6 +113,8 @@
     <!--<script src="../../resources/js/footer.js"></script>-->
     <script src="../../resources/js/modals_.js"></script>
     <script src="../../resources/js/main.js"></script>
+    <!-- Llamada a la librería para generar los gráficos. Para más información https://www.chartjs.org/ -->
+    <script type="text/javascript" src="../../resources/js/chart.umd.min.js"></script>
     <script src="../../resources/js/sweetalert.min.js"></script>
     <script src="../../controllers/utils/components.js"></script>
     <script src="../../controllers/admin/usuario.js"></script>

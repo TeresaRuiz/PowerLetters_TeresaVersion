@@ -131,3 +131,39 @@ const openClientesFrecuentesReport = () => {
     // Se abre el reporte en una nueva pestaña.
     window.open(PATH.href);
 }
+
+
+const openChart = async () => {
+    // Petición para obtener los datos de usuarios activos e inactivos.
+    const DATA = await fetchData(USUARIO_API, 'getUsuariosActivosInactivos');
+
+    // Se comprueba si la respuesta es satisfactoria, de lo contrario se muestra un mensaje con el error.
+    if (DATA.status) {
+        // Abre el modal para mostrar la gráfica.
+        AbrirModalGrafica();
+
+        // Declara los arreglos para guardar los datos a graficar.
+        let estados = [];
+        let totalUsuarios = [];
+
+        // Recorre el conjunto de registros fila por fila a través del objeto row.
+        DATA.dataset.forEach(row => {
+            // Agrega los datos a los arreglos.
+            estados.push(row.estado_usuario);
+            totalUsuarios.push(row.total_usuarios);
+        });
+
+        // Agrega la etiqueta canvas al contenedor de la modal.
+        document.getElementById('chartContainer').innerHTML = `<canvas id="chart"></canvas>`;
+
+        // Llama a la función para generar y mostrar un gráfico de áreas.
+        areaGraph('chart', estados, totalUsuarios, 'Cantidad de usuarios', 'Usuarios "Activos" vs "Inactivos"');
+    } else {
+        // Si hay un error, se elimina el canvas (si existe) y se muestra el error en la consola.
+        const chartElement = document.getElementById('chart');
+        if (chartElement) {
+            chartElement.remove();
+        }
+        console.error(DATA.error);
+    }
+};

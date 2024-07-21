@@ -340,3 +340,45 @@ const fetchData = async (filename, action, form = null) => {
         console.log(error);
     }
 }
+
+/*
+*   Función para generar un gráfico de áreas. Requiere la librería chart.js para funcionar.
+*   Parámetros: canvas (identificador de la etiqueta canvas), xAxis (datos para el eje X), yAxis (datos para el eje Y), legend (etiqueta para los datos) y title (título del gráfico).
+*   Retorno: ninguno.
+*/
+const areaGraph = (canvas, xAxis, yAxis, legend, title) => {
+    // Se crea una instancia para generar el gráfico con los datos recibidos.
+    new Chart(document.getElementById(canvas), {
+        type: 'line',
+        data: {
+            labels: xAxis,
+            datasets: [{
+                label: legend,
+                data: yAxis,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: true // Esto convierte el gráfico de líneas en un gráfico de áreas
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: title
+                },
+                legend: {
+                    display: true
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}

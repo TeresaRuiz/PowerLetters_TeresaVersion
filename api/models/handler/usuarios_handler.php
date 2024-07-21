@@ -154,7 +154,7 @@ class UsuarioHandler
                 ORDER BY apellido_usuario';
         return Database::getRows($sql);
     }
-    
+
 
     /*
      *   Métodos para leer solo uno
@@ -220,8 +220,8 @@ class UsuarioHandler
     }
 
     public function clientesFrecuentes()
-{
-    $sql = 'SELECT u.nombre_usuario, u.apellido_usuario, COUNT(p.id_pedido) AS total_pedidos,
+    {
+        $sql = 'SELECT u.nombre_usuario, u.apellido_usuario, COUNT(p.id_pedido) AS total_pedidos,
             SUM(dp.cantidad * dp.precio) AS monto_total
             FROM tb_usuarios u
             INNER JOIN tb_pedidos p ON u.id_usuario = p.id_usuario
@@ -230,6 +230,20 @@ class UsuarioHandler
             GROUP BY u.id_usuario
             ORDER BY total_pedidos DESC
             LIMIT 10';
-    return Database::getRows($sql);
-}
+        return Database::getRows($sql);
+    }
+    public function getUsuariosActivosInactivos()
+    {
+        $sql = 'SELECT 
+                CASE 
+                    WHEN estado_cliente = 1 THEN "activos" 
+                    ELSE "inactivos" 
+                END as estado_usuario,
+                COUNT(*) as total_usuarios
+            FROM tb_usuarios
+            GROUP BY estado_usuario';
+
+        return Database::getRows($sql);
+    }
+
 }

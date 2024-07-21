@@ -1,13 +1,10 @@
-// Constante para completar la ruta de la API.
+// Constantes para completar las rutas de la API.
 const ADMINISTRADOR_API = 'services/admin/administrador.php';
 // Constante para establecer el formulario de buscar.
 const SEARCH_FORM = document.getElementById('searchForm');
-// Constantes para establecer los elementos de la tabla.
+// Constantes para establecer el contenido de la tabla.
 const TABLE_BODY = document.getElementById('tableBody'),
     ROWS_FOUND = document.getElementById('rowsFound');
-// Constantes para establecer los elementos del componente Modal.
-const SAVE_MODAL = new bootstrap.Modal('#saveModal'),
-    MODAL_TITLE = document.getElementById('modalTitle');
 // Constantes para establecer los elementos del formulario de guardar.
 const SAVE_FORM = document.getElementById('saveForm'),
     ID_ADMINISTRADOR = document.getElementById('idAdministrador'),
@@ -17,13 +14,11 @@ const SAVE_FORM = document.getElementById('saveForm'),
     ALIAS_ADMINISTRADOR = document.getElementById('aliasAdministrador'),
     CLAVE_ADMINISTRADOR = document.getElementById('claveAdministrador'),
     CONFIRMAR_CLAVE = document.getElementById('confirmarClave');
+// Se establece el título de la página web.
+document.querySelector('title').textContent = 'Administradores del sistema';
 
 // Método del evento para cuando el documento ha cargado.
 document.addEventListener('DOMContentLoaded', () => {
-    // Llamada a la función para mostrar el encabezado y pie del documento.
-    loadTemplate();
-    // Se establece el título del contenido principal.
-    MAIN_TITLE.textContent = 'Gestionar administradores';
     // Llamada a la función para llenar la tabla con los registros existentes.
     fillTable();
 });
@@ -43,7 +38,7 @@ SAVE_FORM.addEventListener('submit', async (event) => {
     // Se evita recargar la página web después de enviar el formulario.
     event.preventDefault();
     // Se verifica la acción a realizar.
-    (ID_ADMINISTRADOR.value) ? action = 'updateRow' : action = 'createRow';
+    const action = (ID_ADMINISTRADOR.value) ? 'updateRow' : 'createRow';
     // Constante tipo objeto con los datos del formulario.
     const FORM = new FormData(SAVE_FORM);
     // Petición para guardar los datos del formulario.
@@ -51,7 +46,7 @@ SAVE_FORM.addEventListener('submit', async (event) => {
     // Se comprueba si la respuesta es satisfactoria, de lo contrario se muestra un mensaje con la excepción.
     if (DATA.status) {
         // Se cierra la caja de diálogo.
-        SAVE_MODAL.hide();
+        closeModal();
         // Se muestra un mensaje de éxito.
         sweetAlert(1, DATA.message, true);
         // Se carga nuevamente la tabla para visualizar los cambios.
@@ -71,7 +66,7 @@ const fillTable = async (form = null) => {
     ROWS_FOUND.textContent = '';
     TABLE_BODY.innerHTML = '';
     // Se verifica la acción a realizar.
-    (form) ? action = 'searchRows' : action = 'readAll';
+    const action = (form) ? 'searchRows' : 'readAll';
     // Petición para obtener los registros disponibles.
     const DATA = await fetchData(ADMINISTRADOR_API, action, form);
     // Se comprueba si la respuesta es satisfactoria, de lo contrario se muestra un mensaje con la excepción.
@@ -80,20 +75,20 @@ const fillTable = async (form = null) => {
         DATA.dataset.forEach(row => {
             // Se crean y concatenan las filas de la tabla con los datos de cada registro.
             TABLE_BODY.innerHTML += `
-                <tr>
-                    <td>${row.apellido_administrador}</td>
-                    <td>${row.nombre_administrador}</td>
-                    <td>${row.correo_administrador}</td>
-                    <td>${row.alias_administrador}</td>
-                    <td>
-                        <button type="button" class="btn btn-info" onclick="openUpdate(${row.id_administrador})">
-                            <i class="bi bi-pencil-fill"></i>
-                        </button>
-                        <button type="button" class="btn btn-danger" onclick="openDelete(${row.id_administrador})">
-                            <i class="bi bi-trash-fill"></i>
-                        </button>
-                    </td>
-                </tr>
+            <tr>
+                <td>${row.nombre_administrador}</td>
+                <td>${row.apellido_administrador}</td>
+                <td>${row.correo_administrador}</td>
+                <td>${row.alias_administrador}</td>
+                <td class="action-icons">
+                    <a onclick="openUpdate(${row.id_administrador})">
+                        <i class="ri-edit-line"></i>
+                    </a>
+                    <a onclick="openDelete(${row.id_administrador})">
+                        <i class="ri-delete-bin-line"></i>
+                    </a>
+                </td>
+            </tr>
             `;
         });
         // Se muestra un mensaje de acuerdo con el resultado.
@@ -110,7 +105,7 @@ const fillTable = async (form = null) => {
 */
 const openCreate = () => {
     // Se muestra la caja de diálogo con su título.
-    SAVE_MODAL.show();
+    modal.style.display = "block";
     MODAL_TITLE.textContent = 'Crear administrador';
     // Se prepara el formulario.
     SAVE_FORM.reset();
@@ -132,14 +127,6 @@ const openUpdate = async (id) => {
     const DATA = await fetchData(ADMINISTRADOR_API, 'readOne', FORM);
     // Se comprueba si la respuesta es satisfactoria, de lo contrario se muestra un mensaje con la excepción.
     if (DATA.status) {
-        // Se muestra la caja de diálogo con su título.
-        SAVE_MODAL.show();
-        MODAL_TITLE.textContent = 'Actualizar administrador';
-        // Se prepara el formulario.
-        SAVE_FORM.reset();
-        ALIAS_ADMINISTRADOR.disabled = true;
-        CLAVE_ADMINISTRADOR.disabled = true;
-        CONFIRMAR_CLAVE.disabled = true;
         // Se inicializan los campos con los datos.
         const ROW = DATA.dataset;
         ID_ADMINISTRADOR.value = ROW.id_administrador;
@@ -147,6 +134,12 @@ const openUpdate = async (id) => {
         APELLIDO_ADMINISTRADOR.value = ROW.apellido_administrador;
         CORREO_ADMINISTRADOR.value = ROW.correo_administrador;
         ALIAS_ADMINISTRADOR.value = ROW.alias_administrador;
+        // Se muestra la caja de diálogo con su título.
+        modal.style.display = "block";
+        MODAL_TITLE.textContent = 'Actualizar administrador';
+        ALIAS_ADMINISTRADOR.disabled = true;
+        CLAVE_ADMINISTRADOR.disabled = true;
+        CONFIRMAR_CLAVE.disabled = true;
     } else {
         sweetAlert(2, DATA.error, false);
     }

@@ -5,73 +5,91 @@ require_once('../../libraries/fpdf185/fpdf.php');
 // Se incluye la clase Database para acceder a la base de datos.
 require_once('../../helpers/database.php');
 
+// Se define una clase llamada Report que extiende de FPDF
 class Report extends FPDF
 {
+    // Se define una constante con la URL del cliente
     const CLIENT_URL = 'http://localhost/PowerLetters_TeresaVersion/Views/Private/';
+    // Se declara una propiedad privada para el título
     private $title = null;
 
+    // Método para iniciar el reporte
     public function startReport($title)
     {
+        // Se inicia la sesión
         session_start();
+        // Se verifica si existe una sesión de administrador
         if (isset($_SESSION['idAdministrador'])) {
+            // Se asigna el título
             $this->title = $title;
+            // Se configura el título del documento PDF
             $this->setTitle('Power Letters - Reporte', true);
-            $this->setMargins(10, 15, 15);
+            // Se configuran los márgenes
+            $this->setMargins(15, 15, 15);
+            // Se añade una página
             $this->addPage('P', 'Letter');
+            // Se configura la numeración de páginas
             $this->aliasNbPages();
 
-            // Aplicamos el color de fondo después de añadir la página
+            // Se configura el color de fondo
             $this->setFillColor(235, 238, 255); // #ebeeff
+            // Se dibuja un rectángulo que cubre toda la página
             $this->rect(0, 0, $this->getPageWidth(), $this->getPageHeight(), 'F');
             
-            // Llamamos al header manualmente después de aplicar el fondo
+            // Se llama al método header manualmente
             $this->header();
         } else {
+            // Si no hay sesión, se redirecciona
             header('location:' . self::CLIENT_URL);
         }
     }
 
+    // Método para codificar strings a ISO-8859-1
     public function encodeString($string)
     {
         return iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $string);
     }
 
+    // Método para generar el encabezado del reporte
     public function header()
     {
-        // Guardamos la posición actual
+        // Se establece la posición Y
         $this->setY(15);
         
-        // Establecemos un color de fondo blanco para el área del encabezado
+        // Se configura el color de fondo
         $this->setFillColor(235, 238, 255); // #ebeeff
+        // Se dibuja un rectángulo que cubre toda la página
         $this->rect(0, 0, $this->getPageWidth(), $this->getPageHeight(), 'F');
         
-        // Restablecemos la posición
+        // Se restablece la posición Y
         $this->setY(15);
         
-        // Logo
+        // Se añade el logo
         $this->image('../../images/logo_blanco.png', 15, 15, 20);
         
-        // Título
+        // Se configura y añade el título
         $this->setFont('Arial', 'B', 15);
         $this->cell(30); // Mover a la derecha
         $this->cell(0, 10, $this->encodeString($this->title), 0, 1, 'C');
         
-        // Fecha/Hora y Usuario
+        // Se añade la fecha/hora
         $this->setFont('Arial', '', 10);
         $this->cell(0, 10, $this->encodeString('Fecha/Hora: ' . date('d-m-Y H:i:s')), 0, 1, 'R');
 
-        // Obtener el nombre del administrador desde la base de datos
+        // Se obtiene y añade el nombre del administrador
         $adminName = $this->getAdminName();
         if ($adminName) {
             $this->cell(0, 10, $this->encodeString('Administrador: ' . $adminName), 0, 1, 'R');
         }
         
-        // Restablecemos el color de relleno
+        // Se restablece el color de relleno
         $this->setFillColor(235, 238, 255); // #ebeeff
         
+        // Se añade un salto de línea
         $this->ln(10);
     }
 
+    // Método para generar el pie de página
     public function footer()
     {
         $this->setY(-15);
@@ -79,6 +97,7 @@ class Report extends FPDF
         $this->cell(0, 10, $this->encodeString('Página ') . $this->pageNo() . '/{nb}', 0, 0, 'C');
     }
 
+    // Método para crear el encabezado de la tabla
     public function createTableHeader($headers)
     {
         $this->setFillColor(73, 96, 212); // Color #4960d4
@@ -94,6 +113,7 @@ class Report extends FPDF
         $this->setFont('Arial', '', 11);
     }
 
+    // Método privado para obtener el nombre del administrador
     private function getAdminName()
     {
         $idAdministrador = $_SESSION['idAdministrador'];

@@ -355,3 +355,71 @@
     grid-gap: 20px;
   }
 }
+
+
+/* Estilo para el menú lateral
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background-color: #333;
+  color: #fff;
+  overflow-x: hidden;
+  transition: 0.3s;
+  padding-top: 20px;
+}
+
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar__item {
+  padding: 15px;
+}
+
+.sidebar__link {
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar__link i {
+  margin-right: 10px;
+}
+
+.sidebar__submenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: none;
+}
+
+.sidebar__submenu li {
+  padding: 10px 20px;
+}
+
+.sidebar__submenu li a {
+  color: #ddd;
+}
+
+/* Mostrar submenú al pasar el ratón por encima */
+.sidebar__item:hover .sidebar__submenu {
+  display: block;
+}
+
+/* Estilo para el contenido principal cuando el menú lateral está activo 
+.main {
+  margin-left: 250px;
+  transition: margin-left 0.3s;
+}
+*/

@@ -65,7 +65,7 @@ class Report extends FPDF
         $this->setY(15);
         
         // Se añade el logo
-        $this->image('../../images/logo_blanco.png', 15, 15, 20);
+        $this->image('../../images/logo_blanco.png', 15, 15, 15);
         
         // Se configura y añade el título
         $this->setFont('Arial', 'B', 15);

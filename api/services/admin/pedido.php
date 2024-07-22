@@ -138,6 +138,13 @@ if (isset($_GET['action'])) {
                     $result['error'] = 'No se encontraron pedidos para el usuario especificado';
                 }
                 break;
+            case 'readVentasDiarias':
+                if ($result['dataset'] = $pedido->readVentasDiarias()) {
+                    $result['status'] = 1;
+                } else {
+                    $result['error'] = 'No hay ventas para los últimos 7 días';
+                }
+                break;
 
             default: // Caso por defecto para manejar acciones desconocidas.
                 $result['error'] = 'Acción no disponible dentro de la sesión'; // Mensaje si la acción no es válida.

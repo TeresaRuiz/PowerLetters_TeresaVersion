@@ -600,5 +600,14 @@ class PedidoHandler
         // Llamar al método getRows de la clase Database para ejecutar la consulta y devolver los pedidos del usuario.
         return Database::getRows($sql, $params);
     }
+    public function readVentasDiarias()
+    {
+        $sql = 'SELECT DATE(fecha_pedido) AS fecha, 
+        COUNT(*) AS total_pedidos FROM tb_pedidos 
+        WHERE fecha_pedido >= CURDATE() - INTERVAL 7 DAY 
+        AND estado = "FINALIZADO" GROUP BY DATE(fecha_pedido) ORDER BY fecha';
+        return Database::getRows($sql);
+    }
+
 
 }

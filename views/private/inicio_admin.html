@@ -11,12 +11,16 @@
     <style>
         .chart-container {
             margin-left: 85px; /* Ajusta este valor según sea necesario */
-        }
-        .text-align {
-            text-align: center;
+            border: 2px solid white; /* Borde blanco */
+            border-radius: 8px; /* Bordes redondeados opcional */
+            padding: 10px; /* Espacio interno opcional */
+            background-color: rgba(255, 255, 255, 0.1); /* Fondo blanco semitransparente opcional */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra opcional */
+            display: flex; /* Contenedor flexible */
+            flex-direction: column; /* Dirección de la columna */
+            align-items: center; /* Centrar horizontalmente el contenido */
         }
     </style>
-    
 </head>
 
 <body>
@@ -25,50 +29,41 @@
     </header>
 
     <br><br><br><br><br><br><br><br>
-    <h1 class="prueba">Buenos días</h1>
+    <h1 class="prueba">Bienvenido a Power Letters</h1>
     <br><br><br><br><br><br>
 
-    <!--========== LOADER SCREEN ==========
-
-    <div class="loader__container">
-
-        <img src="../../resources/img/book-loading.gif" alt="loader">
-     </div>-->
-
-    <!-- Agrega un elemento <canvas> en el lugar donde deseas mostrar la gráfica -->
-    
-        <!-- Contenedor de gráficos -->
-        <div class="row">
-            <div class="col-sm-12 col-md-6 col-lg-6 chart-container" style="width: 700px; height: 400px;">
-                <h3 class="text-align">Cantidad de usuarios registrados por mes</h3>
-                <canvas id="chart1"></canvas>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-6 chart-container" style="width: 700px; height: 400px;">
-                <h3 class="text-align">Ventas diarias de libros</h3>
-                <canvas id="lineChart"></canvas>
-            </div>
+    <!-- Contenedor de gráficos -->
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6 chart-container" style="width: 700px; height: 400px;">
+            <h3>Cantidad de usuarios registrados por mes</h3>
+            <canvas id="chart1"></canvas>
         </div>
-        <div class="row">
-            <div class="col-sm-12 col-md-6 col-lg-6 chart-container" style="width: 700px; height: 400px;">
-                <h3 class="text-align">Top 5 de géneros literarios más populares</h3>
-                <canvas id="pieChart"></canvas>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-6 chart-container" style="width: 700px; height: 400px;">
-                <h3 class="text-align">Evaluaciones de libros</h3>
-                <canvas id="radarChart"></canvas>
-            </div>
+        <div class="col-sm-12 col-md-6 col-lg-6 chart-container" style="width: 700px; height: 400px;">
+            <h3>Ventas diarias de libros</h3>
+            <canvas id="lineChart"></canvas>
         </div>
-        <br><br><br><br><br><br>
-        <div class="row">
-            <div class="col-sm-12 col-md-6 col-lg-6 chart-container" style="width: 700px; height: 400px; position: relative;">
-                <h3 class="text-align">Distribución de pedidos por estados</h3><br><br><br>
-                <canvas id="polarChart" style="position: absolute; top: 50%; left: 100%; transform: translate(-50%, -50%);"></canvas>
-            </div>
+    </div>
+    <br><br>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6 chart-container" style="width: 700px; height: 400px;">
+            <h3>Top 5 de géneros literarios más populares</h3>
+            <canvas id="pieChart"></canvas>
         </div>
-        <br><br><br><br><br><br>
-      <!-- Importación de la librería para generar los gráficos. Para más información https://www.chartjs.org/ -->
-      <script type="text/javascript" src="../../resources/js/chart.umd.min.js"></script>
-
+        <div class="col-sm-12 col-md-6 col-lg-6 chart-container" style="width: 700px; height: 400px;">
+            <h3>Evaluaciones de libros</h3>
+            <canvas id="radarChart"></canvas>
+        </div>
+    </div>
+    <br><br>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6 chart-container" style="width: 700px; height: 400px; position: relative;">
+            <h3>Distribución de pedidos por estados</h3>
+            <canvas id="polarChart" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></canvas>
+        </div>
+    </div>
+    <br><br><br><br><br><br>
+    <!-- Importación de la librería para generar los gráficos. Para más información https://www.chartjs.org/ -->
+    <script type="text/javascript" src="../../resources/js/chart.umd.min.js"></script>
 
     <!--=============== SWIPER JS ===============-->
     <script src="../../Resources/js/swiper-bundle.min.js"></script>

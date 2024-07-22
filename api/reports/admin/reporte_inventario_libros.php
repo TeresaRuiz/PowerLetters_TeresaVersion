@@ -21,10 +21,10 @@ $pdf->ln(10);
 $pdf->setFont('Arial', 'B', 11);
 $pdf->setFillColor(225);
 $pdf->cell(70, 10, $pdf->encodeString('Título'), 1, 0, 'C', 1);
-$pdf->cell(40, 10, $pdf->encodeString('Autor'), 1, 0, 'C', 1);
-$pdf->cell(30, 10, $pdf->encodeString('Género'), 1, 0, 'C', 1);
-$pdf->cell(25, 10, $pdf->encodeString('Existencias'), 1, 0, 'C', 1);
-$pdf->cell(25, 10, $pdf->encodeString('Precio'), 1, 1, 'C', 1);
+$pdf->cell(42, 10, $pdf->encodeString('Autor'), 1, 0, 'C', 1);
+$pdf->cell(32, 10, $pdf->encodeString('Género'), 1, 0, 'C', 1);
+$pdf->cell(22, 10, $pdf->encodeString('Existencias'), 1, 0, 'C', 1);
+$pdf->cell(22, 10, $pdf->encodeString('Precio'), 1, 1, 'C', 1);
 
 $pdf->setFont('Arial', '', 10);
 foreach ($libros as $libro) {
@@ -40,10 +40,10 @@ foreach ($libros as $libro) {
     $pdf->SetXY($pdf->GetX() + 70, $pdf->GetY() - 10);
     
     // Información de autor, género, existencias y precio
-    $pdf->cell(40, 10, $pdf->encodeString($libro['nombre_autor']), 1, 0);
-    $pdf->cell(30, 10, $pdf->encodeString($libro['nombre_genero']), 1, 0);
-    $pdf->cell(25, 10, $pdf->encodeString($libro['existencias']), 1, 0, 'C');
-    $pdf->cell(25, 10, '$' . number_format($libro['precio'], 2), 1, 1, 'R');
+    $pdf->cell(42, 10, $pdf->encodeString($libro['nombre_autor']), 1, 0);
+    $pdf->cell(32, 10, $pdf->encodeString($libro['nombre_genero']), 1, 0);
+    $pdf->cell(22, 10, $pdf->encodeString($libro['existencias']), 1, 0, 'C');
+    $pdf->cell(22, 10, '$' . number_format($libro['precio'], 2), 1, 1, 'R');
     
     $pdf->setTextColor(0);
 }

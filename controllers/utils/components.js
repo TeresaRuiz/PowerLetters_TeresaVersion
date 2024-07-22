@@ -269,6 +269,7 @@ const pieGraph = (canvas, legends, values, title) => {
     values.forEach(() => {
         colors.push('#' + (Math.random().toString(16)).substring(2, 8));
     });
+    
     // Se crea una instancia para generar el gráfico con los datos recibidos.
     new Chart(document.getElementById(canvas), {
         type: 'pie',
@@ -280,6 +281,8 @@ const pieGraph = (canvas, legends, values, title) => {
             }]
         },
         options: {
+            responsive: false, // Hacer que el gráfico sea responsivo
+            maintainAspectRatio: false, // Permitir que el gráfico ajuste su tamaño al contenedor
             plugins: {
                 title: {
                     display: true,
@@ -289,6 +292,7 @@ const pieGraph = (canvas, legends, values, title) => {
         }
     });
 }
+
 
 /*
 *   Función asíncrona para cerrar la sesión del usuario.

@@ -69,7 +69,7 @@ class Report extends FPDF
         
         // Se configura y añade el título
         $this->setFont('Arial', 'B', 15);
-        $this->cell(30); // Mover a la derecha
+        $this->cell(20); // Mover a la derecha
         $this->cell(0, 10, $this->encodeString($this->title), 0, 1, 'C');
         
         // Se añade la fecha/hora

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Letters - Panel de Administración</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .logo-container {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .nav__logo {
+            font-size: 1.5rem;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .nav {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .nav__list {
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .nav__item {
+            margin-bottom: 10px;
+        }
+
+        .nav__link {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .nav__link:hover, .nav__link.active-link {
+            background-color: #e9ecef;
+        }
+
+        .nav__link i {
+            margin-right: 10px;
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .nav__item-dropdown .dropdown-menu {
+            display: none;
+            padding-left: 20px;
+        }
+
+        .nav__item-dropdown .dropdown-menu.show {
+            display: block;
+        }
+
+        .dark-theme {
+            background-color: #333;
+            color: #f8f9fa;
+        }
+
+        .dark-theme .header {
+            background-color: #222;
+        }
+
+        .dark-theme .nav__link {
+            color: #f8f9fa;
+        }
+
+        .dark-theme .nav__link:hover, .dark-theme .nav__link.active-link {
+            background-color: #444;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="sidebar">
+            <div class="logo-container">
+                <a href="#" class="nav__logo">
+                    <i class="ri-book-3-line"></i> Power Letters
+                </a>
+            </div>
+            <nav class="nav">
+                <ul class="nav__list">
+                    <li class="nav__item">
+                        <a href="../Private/inicio_admin.html" class="nav__link active-link">
+                            <i class="ri-home-line"></i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="../Private/libros.html" class="nav__link">
+                            <i class="ri-book-3-line"></i>
+                            <span>Libros</span>
+                        </a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="../Private/generos.html" class="nav__link">
+                            <i class="ri-book-mark-line"></i>
+                            <span>Géneros</span>
+                        </a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="../Private/pedidos.html" class="nav__link">
+                            <i class="ri-shopping-cart-line"></i>
+                            <span>Pedidos</span>
+                        </a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="../Private/comentarios.html" class="nav__link">
+                            <i class="ri-message-3-line"></i>
+                            <span>Comentarios</span>
+                        </a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="../Private/usuarios.html" class="nav__link">
+                            <i class="ri-user-line"></i>
+                            <span>Clientes</span>
+                        </a>
+                    </li>
+                    <li class="nav__item nav__item-dropdown">
+                        <a href="#" class="nav__link nav__link-dropdown">
+                            <i class="ri-book-3-line"></i>
+                            <span>Más...</span>
+                            <i class="ri-arrow-down-s-line dropdown-icon"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../Private/autores.html">Autores</a></li>
+                            <li><a href="../Private/clasificacion.html">Clasificaciones</a></li>
+                            <li><a href="../Private/editoriales.html">Editoriales</a></li>
+                            <li><a href="../Private/administrador.html">Administradores</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <i class="ri-user-line login-button" id="login-button"></i>
+                <i class="ri-moon-line change-theme" id="theme-button"></i>
+            </div>
+        </div>
+    </header>
+    <div class="content">
+        <!-- Aquí va el contenido principal de la página -->
+        <h1>Bienvenido al Panel de Administración</h1>
+        <p>Este es el contenido principal de la página.</p>
+    </div>
+
+    <script>
+        // Constante para completar la ruta de la API.
+        const USER_API = 'services/admin/administrador.php';
+
+        // Función asíncrona para cargar el encabezado y pie del documento.
+        const loadTemplate = async () => {
+            try {
+                // Petición para obtener el nombre del usuario que ha iniciado sesión.
+                const DATA = await fetchData(USER_API, 'getUser');
+                // Se verifica si el usuario está autenticado, de lo contrario se envía a iniciar sesión.
+                if (DATA.session) {
+                    // Se comprueba si existe un alias definido para el usuario, de lo contrario se muestra un mensaje con la excepción.
+                    if (DATA.status) {
+                        // El menú ya está en el HTML, así que no necesitamos crearlo dinámicamente aquí.
+                        console.log('Usuario autenticado:', DATA.username);
+                    } else {
+                        sweetAlert(3, DATA.error, false, 'index.html');
+                    }
+                } else {
+                    // Redirigir a la página de inicio de sesión si no está autenticado
+                    location.href = 'index.html';
+                }
+            } catch (error) {
+                console.error('Error loading template:', error);
+            }
+        };
+
+        // Configurar el menú desplegable
+        document.addEventListener("DOMContentLoaded", function () {
+            const dropdownLinks = document.querySelectorAll('.nav__link-dropdown');
+            dropdownLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const dropdownMenu = this.nextElementSibling;
+                    dropdownMenu.classList.toggle('show');
+                });
+            });
+
+            // Configurar el cambio de tema
+            const themeButton = document.getElementById('theme-button');
+            const darkTheme = 'dark-theme';
+            const iconTheme = 'ri-sun-line';
+
+            // Obtiene el tema e icono seleccionados previamente
+            const selectedTheme = localStorage.getItem('selected-theme');
+            const selectedIcon = localStorage.getItem('selected-icon');
+
+            // Obtiene el tema e icono actuales
+            const getCurrentTheme = () => document.body.classList.contains(darkTheme) ? 'dark' : 'light';
+            const getCurrentIcon = () => themeButton.classList.contains(iconTheme) ? 'ri-moon-line' : 'ri-sun-line';
+
+            // Valida si el usuario eligió un tema previamente
+            if (selectedTheme) {
+                document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme);
+                themeButton.classList[selectedIcon === 'ri-moon-line' ? 'add' : 'remove'](iconTheme);
+            }
+
+            // Activa/desactiva el tema con el botón
+            themeButton.addEventListener('click', () => {
+                document.body.classList.toggle(darkTheme);
+                themeButton.classList.toggle(iconTheme);
+                localStorage.setItem('selected-theme', getCurrentTheme());
+                localStorage.setItem('selected-icon', getCurrentIcon());
+            });
+        });
+
+        // Llamar a la función para cargar la plantilla cuando el DOM esté completamente cargado
+        document.addEventListener('DOMContentLoaded', loadTemplate);
+
+        // Función fetchData (debes implementarla o incluirla de tu código original)
+        async function fetchData(url, method, data = {}) {
+            // Implementa esta función según tus necesidades
+            // Debería hacer una petición al servidor y devolver los datos
+        }
+
+        // Función sweetAlert (debes implementarla o incluirla de tu código original)
+        function sweetAlert(type, message, reload, url) {
+            // Implementa esta función según tus necesidades
+            // Debería mostrar una alerta al usuario
+        }
+    </script>
+</body>
+</html>

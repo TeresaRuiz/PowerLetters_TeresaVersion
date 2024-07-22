@@ -29,7 +29,7 @@ VALUES ('Ficción'),
 ('Juegos de mesa'), 
 ('Colección');
 
-SELECT*FROM tb_generos;
+SELECT*FROM tb_usuarios;
 
 INSERT INTO tb_clasificaciones (nombre, descripcion)
 VALUES ('Best Seller', 'Libros más vendidos y populares del momento'),
@@ -119,11 +119,11 @@ VALUES ('Penguin Random House'),
 ('Pearson Longman'),
 ('Routledge');
 
-SELECT*FROM tb_editoriales;
+SELECT*FROM administrador;
 
 INSERT INTO tb_libros (titulo, id_autor, precio, descripcion, imagen, id_clasificacion, id_editorial, existencias, id_genero)
 VALUES 
-  ('Cien años de soledad', 1, 15.99, 'Una saga familiar en Macondo', 'imagen1.jpg', 1, 1, 50, 1),
+  ('Cien años de soledad', 1, 15.99, 'Una saga familiar en Macondo', 'imagen1.jpg', 1, 1, , 1),
   ('Orgullo y Prejuicio', 2, 12.99, 'Amor y prejuicios en la Inglaterra del siglo XIX', 'imagen2.jpg', 2, 2,30, 2),
   ('Tokio Blues', 3, 14.50, 'Juventud y melancolía en Tokio', 'imagen3.jpg', 3, 3, 40, 3),
   ('Asesinato en el Orient Express', 4, 11.75, 'Hercule Poirot resuelve un misterio a bordo del tren', 'imagen4.jpg', 4, 4, 25, 4),
@@ -135,7 +135,7 @@ VALUES
   ('Desolación' ,10 ,12.25 ,'Poesía íntima y emotiva de Gabriela Mistral','imagen10.jpg' ,10 ,10,30 ,10),
   ('Rayuela' ,11 ,17.99 ,'Novela experimental y desestructurada','imagen11.jpg' ,11 ,11,40 ,11),
   ('El cuento de la criada' ,12 ,14.50 ,'Distopía feminista en Gilead','imagen12.jpg' ,12 ,12,55 ,12),
-  ('Veinte poemas de amor y una canción desesperada' ,13 ,11.75 ,'Poesía apasionada de Pablo Neruda','imagen13.jpg' ,13,13 ,25 ,13),
+  ('Veinte poemas de amor y una canción' ,13 ,11.75 ,'Poesía apasionada de Pablo Neruda','imagen13.jpg' ,13,13 ,25 ,13),
   ('1984' ,14 ,16.99 ,'Distopía totalitaria y vigilancia extrema','imagen14.jpg' ,14 ,14,60 ,14),
   ('La casa de los espíritus' ,15 ,18.25 ,'Saga familiar y realismo mágico en Chile','imagen15.jpg' ,15 ,15,40 ,15),
   ('Crimen y castigo',16,13.99,'Crimen moral y castigo psicológico en San Petersburgo','imagen16.jpg',16,16,30,16),
@@ -149,22 +149,67 @@ VALUES
   ('Siddhartha',24,15.50,'Búsqueda espiritual y despertar interior en la India','imagen24.jpg',24,24,35,24),
   ('Demian',25,14.75,'Desarrollo personal y dualidad interna del protagonista Emil Sinclair','imagen25.jpg',25,25,30,25);
   
+INSERT INTO tb_libros (titulo, id_autor, precio, descripcion, imagen, id_clasificacion, id_editorial, existencias, id_genero)
+VALUES 
+  ('Moby Dick', 1, 16.00, 'La obsesión de un capitán por una ballena blanca', 'imagen26.jpg', 1, 1, 15, 1),
+  ('El gran Gatsby', 2, 14.50, 'La búsqueda del sueño americano en los años 20', 'imagen27.jpg', 2, 2, 20, 1),
+  ('Cumbres borrascosas', 3, 12.50, 'Amor y venganza en los páramos ingleses', 'imagen28.jpg', 3, 3, 25, 2),
+  ('El diario de una pasión', 4, 13.99, 'Una historia de amor que desafía el tiempo', 'imagen29.jpg', 4, 4, 30, 2),
+  ('Dune', 5, 19.99, 'Una épica historia de poder y supervivencia en un planeta desértico', 'imagen30.jpg', 5, 5, 15, 3),
+  ('Neuromante', 6, 17.50, 'Un thriller cibernético que define el género', 'imagen31.jpg', 6, 6, 20, 3),
+  ('El silencio de los corderos', 7, 16.50, 'Un thriller psicológico que sigue a un asesino en serie', 'imagen32.jpg', 7, 7, 15, 4),
+  ('La chica del tren', 8, 14.25, 'Un misterio que se desarrolla desde la perspectiva de varias mujeres', 'imagen33.jpg', 8, 8, 30, 4),
+  ('El hobbit', 9, 16.00, 'La aventura de Bilbo Bolsón en la Tierra Media', 'imagen34.jpg', 9, 9, 25, 5),
+  ('Juego de tronos', 10, 22.00, 'Intrigas y luchas por el trono en un mundo medieval', 'imagen35.jpg', 10, 10, 30, 5);
   SELECT*FROM tb_libros;
   
-INSERT INTO tb_pedidos (id_usuario, direccion_pedido, estado, fecha_pedido) VALUES 
-    (1, 'Calle Principal 123', 'PENDIENTE', NOW()),
-    (2, 'Avenida Central 456', 'ENTREGADO', NOW()),
-    (3, 'Plaza Mayor 789', 'FINALIZADO', NOW()),
-    (4, 'Calle Secundaria 456', 'CANCELADO', NOW()),
-    (5, 'Avenida Principal 789', 'PENDIENTE', NOW());
+-- Insertar datos en la tabla tb_pedidos
+INSERT INTO tb_pedidos (id_usuario, direccion_pedido, estado, fecha_pedido) VALUES
+    (1, 'Calle Principal 123', 'FINALIZADO', '2024-07-01'),
+    (2, 'Avenida Central 456', 'FINALIZADO', '2024-07-02'),
+    (3, 'Plaza Mayor 789', 'FINALIZADO', '2024-07-03'),
+    (4, 'Calle Secundaria 456', 'FINALIZADO', '2024-07-04'),
+    (5, 'Avenida Principal 789', 'FINALIZADO', '2024-07-05'),
+    (1, 'Calle Principal 123', 'FINALIZADO', '2024-07-06'),
+    (2, 'Avenida Central 456', 'FINALIZADO', '2024-07-07'),
+    (3, 'Plaza Mayor 789', 'FINALIZADO', '2024-07-08'),
+    (4, 'Calle Secundaria 456', 'FINALIZADO', '2024-07-09'),
+    (5, 'Avenida Principal 789', 'FINALIZADO', '2024-07-10'),
+    (1, 'Calle Principal 123', 'FINALIZADO', '2024-07-11'),
+    (2, 'Avenida Central 456', 'FINALIZADO', '2024-07-12'),
+    (3, 'Plaza Mayor 789', 'FINALIZADO', '2024-07-13'),
+    (4, 'Calle Secundaria 456', 'FINALIZADO', '2024-07-14'),
+    (5, 'Avenida Principal 789', 'FINALIZADO', '2024-07-15'),
+    (1, 'Calle Principal 123', 'FINALIZADO', '2024-07-16'),
+    (2, 'Avenida Central 456', 'FINALIZADO', '2024-07-17'),
+    (3, 'Plaza Mayor 789', 'FINALIZADO', '2024-07-18'),
+    (4, 'Calle Secundaria 456', 'FINALIZADO', '2024-07-19'),
+    (5, 'Avenida Principal 789', 'FINALIZADO', '2024-07-20');
 
 -- Insertar datos en la tabla tb_detalle_pedidos
-INSERT INTO tb_detalle_pedidos (id_libro, cantidad, id_pedido, precio) VALUES 
+INSERT INTO tb_detalle_pedidos (id_libro, cantidad, id_pedido, precio) VALUES
     (1, 2, 1, 19.99),
     (2, 1, 2, 24.99),
-    (3, 3, 3, 14.99),
-    (4, 1, 4, 29.99),
-    (5, 2, 5, 12.99);
+    (3, 1, 3, 14.99),
+    (4, 3, 4, 29.99),
+    (5, 2, 5, 12.99),
+    (1, 1, 6, 19.99),
+    (2, 2, 7, 24.99),
+    (3, 1, 8, 14.99),
+    (4, 1, 9, 29.99),
+    (5, 3, 10, 12.99),
+    (1, 2, 11, 19.99),
+    (2, 1, 12, 24.99),
+    (3, 2, 13, 14.99),
+    (4, 1, 14, 29.99),
+    (5, 1, 15, 12.99),
+    (1, 1, 16, 19.99),
+    (2, 2, 17, 24.99),
+    (3, 1, 18, 14.99),
+    (4, 3, 19, 29.99),
+    (5, 2, 20, 12.99);
+
+
 
 -- Insertar datos en la tabla tb_comentarios
 INSERT INTO tb_comentarios (comentario, calificacion, estado_comentario, id_detalle) VALUES 
@@ -178,29 +223,3 @@ INSERT INTO tb_comentarios (comentario, calificacion, estado_comentario, id_deta
 SELECT*FROM tb_pedidos;
 SELECT*FROM tb_detalle_pedidos;
 SELECT*FROM tb_comentarios;
-
-SELECT p.id_pedido
-                 FROM tb_pedidos AS p
-                 JOIN tb_usuarios AS u ON p.id_usuario = u.id_usuario
-                 WHERE p.estado = 1 AND u.id_usuario = 1
-
-
-
-
-SELECT g.nombre AS genero, COUNT(l.id_libro) AS cantidad 
-                FROM tb_generos g 
-                LEFT JOIN tb_libros l ON g.id_genero = l.id_genero 
-                GROUP BY g.nombre
-                
-                
-                
-                SELECT tb_libros.titulo, AVG(tb_comentarios.calificacion) AS calificacion_promedio
-            FROM tb_libros
-            INNER JOIN tb_detalle_pedidos ON tb_libros.id_libro = tb_detalle_pedidos.id_libro
-            INNER JOIN tb_comentarios ON tb_detalle_pedidos.id_detalle = tb_comentarios.id_detalle
-            GROUP BY tb_libros.id_libro
-            
-            
-            SELECT estado, COUNT(id_pedido) AS cantidad
-                FROM tb_pedidos
-                GROUP BY estado

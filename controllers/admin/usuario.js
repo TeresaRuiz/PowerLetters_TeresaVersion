@@ -13,6 +13,7 @@ const ESTADO_CLIENTE = document.getElementById('estado_cliente'); // Campo para 
 document.addEventListener('DOMContentLoaded', () => {
     // Llamada a la función para llenar la tabla con los registros existentes.
     fillTable();
+    CerrarModalGrafica();
 });
 
 // Método del evento para cuando se envía el formulario de buscar.

@@ -18,6 +18,7 @@ document.querySelector('title').textContent = 'Género de libros';
 document.addEventListener('DOMContentLoaded', () => {
     // Llamada a la función para llenar la tabla con los registros existentes.
     fillTable();
+    CerrarModalGrafica();
 });
 
 // Método del evento para cuando se envía el formulario de buscar.

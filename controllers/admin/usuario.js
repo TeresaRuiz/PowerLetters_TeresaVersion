@@ -133,7 +133,6 @@ const openClientesFrecuentesReport = () => {
     window.open(PATH.href);
 }
 
-
 const openChart = async () => {
     // Petición para obtener los datos de usuarios activos e inactivos.
     const DATA = await fetchData(USUARIO_API, 'getUsuariosActivosInactivos');
@@ -157,8 +156,8 @@ const openChart = async () => {
         // Agrega la etiqueta canvas al contenedor de la modal.
         document.getElementById('chartContainer').innerHTML = `<canvas id="chart"></canvas>`;
 
-        // Llama a la función para generar y mostrar un gráfico de áreas.
-        areaGraph('chart', estados, totalUsuarios, 'Cantidad de usuarios', 'Usuarios "Activos" vs "Inactivos"');
+        // Llama a la función para generar y mostrar un gráfico de donas.
+        doughnutGraph('chart', estados, totalUsuarios, 'Usuarios "Activos" vs "Inactivos"');
     } else {
         // Si hay un error, se elimina el canvas (si existe) y se muestra el error en la consola.
         const chartElement = document.getElementById('chart');

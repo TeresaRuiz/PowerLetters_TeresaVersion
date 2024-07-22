@@ -255,8 +255,8 @@ class UsuarioHandler
         // Consulta SQL para contar los usuarios activos e inactivos agrupados por su estado
         $sql = 'SELECT 
                 CASE 
-                    WHEN estado_cliente = 1 THEN "activos" 
-                    ELSE "inactivos" 
+                    WHEN estado_cliente = 1 THEN "Activos" 
+                    ELSE "Inactivos" 
                 END as estado_usuario,
                 COUNT(*) as total_usuarios
             FROM tb_usuarios

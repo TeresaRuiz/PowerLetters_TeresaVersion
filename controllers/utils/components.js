@@ -269,7 +269,7 @@ const pieGraph = (canvas, legends, values, title) => {
     values.forEach(() => {
         colors.push('#' + (Math.random().toString(16)).substring(2, 8));
     });
-    
+
     // Se crea una instancia para generar el gráfico con los datos recibidos.
     new Chart(document.getElementById(canvas), {
         type: 'pie',
@@ -410,6 +410,8 @@ const doughnutGraph = (canvas, legends, values, title) => {
             }]
         },
         options: {
+            responsive: false, // Hacer que el gráfico sea responsivo
+            maintainAspectRatio: false,
             plugins: {
                 title: {
                     display: true,

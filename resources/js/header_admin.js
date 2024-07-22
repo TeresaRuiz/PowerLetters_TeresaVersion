@@ -69,8 +69,8 @@ const loadTemplate = async () => {
                                         <li><a href="../Private/administrador.html">Administradores</a></li>
                                     </ul>
                                 </li>
-                                <i class="ri-user-line login-button" id="login-button"></i>
                                 <i class="ri-moon-line change-theme" id="theme-button"></i>
+                                <a href="#" onclick="logOut()"><i class="ri-logout-box-line"></i>Salir</a>
                             </ul>
                         </div>
                     </nav>

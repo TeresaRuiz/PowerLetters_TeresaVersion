@@ -89,8 +89,8 @@ const loadTemplate = async () => {
                             </div>
                             <div>
                                 <span class="login__signup">You do not have an account? <a href="#">Sign up</a></span>
-                                <a href="#" class="login__forget">You forgot your password</a>
-                                <button type="submit" class="login__button button">Log In</button>
+                                <a href="#" class="login__forget">¿Has olvidado tu contraseña?</a>
+                                <button type="submit" class="login__button button">Iniciar sesión</button>
                             </div>
                         </form>
                         <i class="ri-close-line login__close" id="login-close"></i>

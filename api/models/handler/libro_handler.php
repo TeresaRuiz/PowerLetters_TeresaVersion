@@ -200,74 +200,130 @@ class LibroHandler
             return false;
         }
     }
-
+    /*
+     * Método para obtener la distribución de libros por género, limitando a los 5 más populares.
+     */
     public function readDistribucionLibrosPorGenero()
     {
-        // Query para obtener la distribución de libros por género, limitando a los 5 más populares
-        $sql = 'SELECT g.nombre AS genero, COUNT(l.id_libro) AS cantidad 
-                FROM tb_generos g 
-                LEFT JOIN tb_libros l ON g.id_genero = l.id_genero 
-                GROUP BY g.nombre 
-                ORDER BY cantidad DESC 
-                LIMIT 5';
+        // Definir la consulta SQL para obtener la distribución de libros por género.
+        $sql = 'SELECT 
+                g.nombre AS genero, 
+                COUNT(l.id_libro) AS cantidad 
+            FROM 
+                tb_generos g 
+            LEFT JOIN 
+                tb_libros l ON g.id_genero = l.id_genero 
+            GROUP BY 
+                g.nombre 
+            ORDER BY 
+                cantidad DESC 
+            LIMIT 5';
 
-        // Llamar al método getRows de la clase Database para ejecutar la consulta
+        // Llamar al método getRows de la clase Database para ejecutar la consulta.
         return Database::getRows($sql);
     }
-    // Función para obtener las evaluaciones de los libros
+
+    /*
+     * Método para obtener las evaluaciones de los libros.
+     */
     public function readEvaluacionesLibros()
     {
-        $sql = 'SELECT tb_libros.titulo, AVG(tb_comentarios.calificacion) AS calificacion_promedio
-            FROM tb_libros
-            INNER JOIN tb_detalle_pedidos ON tb_libros.id_libro = tb_detalle_pedidos.id_libro
-            INNER JOIN tb_comentarios ON tb_detalle_pedidos.id_detalle = tb_comentarios.id_detalle
-            GROUP BY tb_libros.id_libro
-            ORDER BY calificacion_promedio DESC
-            Limit 5;';
+        // Definir la consulta SQL para obtener las evaluaciones de los libros.
+        $sql = 'SELECT 
+                tb_libros.titulo, 
+                AVG(tb_comentarios.calificacion) AS calificacion_promedio
+            FROM 
+                tb_libros
+            INNER JOIN 
+                tb_detalle_pedidos ON tb_libros.id_libro = tb_detalle_pedidos.id_libro
+            INNER JOIN 
+                tb_comentarios ON tb_detalle_pedidos.id_detalle = tb_comentarios.id_detalle
+            GROUP BY 
+                tb_libros.id_libro
+            ORDER BY 
+                calificacion_promedio DESC
+            LIMIT 5';
+
+        // No se requieren parámetros para esta consulta.
         $params = null;
-        return Database::getRows($sql, $params);
-    }
-    //Metódo para generar reportes
-    public function librosDeGenero()
-    {
-        $sql = 'SELECT l.titulo, a.nombre AS nombre_autor, l.precio, l.existencias
-        FROM tb_libros l
-        INNER JOIN tb_autores a ON l.id_autor = a.id_autor  
-        INNER JOIN tb_generos g ON l.id_genero = g.id_genero
-        WHERE g.id_genero = ?
-        ORDER BY l.titulo';
-        $params = array($this->genero);
+
+        // Llamar al método getRows de la clase Database para ejecutar la consulta.
         return Database::getRows($sql, $params);
     }
 
+    /*
+     * Método para generar reportes de libros de un género específico.
+     */
+    public function librosDeGenero()
+    {
+        // Definir la consulta SQL para obtener libros de un género específico.
+        $sql = 'SELECT 
+                l.titulo, 
+                a.nombre AS nombre_autor, 
+                l.precio, 
+                l.existencias
+            FROM 
+                tb_libros l
+            INNER JOIN 
+                tb_autores a ON l.id_autor = a.id_autor  
+            INNER JOIN 
+                tb_generos g ON l.id_genero = g.id_genero
+            WHERE 
+                g.id_genero = ?
+            ORDER BY 
+                l.titulo';
+
+        // Establecer los parámetros para la consulta (ID del género).
+        $params = array($this->genero);
+
+        // Llamar al método getRows de la clase Database para ejecutar la consulta.
+        return Database::getRows($sql, $params);
+    }
+
+    /*
+     * Método para obtener el inventario de libros.
+     */
     public function obtenerInventario()
     {
+        // Definir la consulta SQL para obtener el inventario de libros.
         $sql = 'SELECT
-            l.id_libro,
-            l.titulo AS titulo_libro,
-            a.nombre AS nombre_autor,
-            g.nombre AS nombre_genero,
-            e.nombre AS nombre_editorial,
-            l.existencias,
-            l.precio
-        FROM
-            tb_libros AS l
-        INNER JOIN
-            tb_autores AS a ON l.id_autor = a.id_autor
-        INNER JOIN
-            tb_editoriales AS e ON l.id_editorial = e.id_editorial
-        INNER JOIN
-            tb_generos AS g ON l.id_genero = g.id_genero
-        ORDER BY l.existencias ASC';
+                l.id_libro,
+                l.titulo AS titulo_libro,
+                a.nombre AS nombre_autor,
+                g.nombre AS nombre_genero,
+                e.nombre AS nombre_editorial,
+                l.existencias,
+                l.precio
+            FROM
+                tb_libros AS l
+            INNER JOIN
+                tb_autores AS a ON l.id_autor = a.id_autor
+            INNER JOIN
+                tb_editoriales AS e ON l.id_editorial = e.id_editorial
+            INNER JOIN
+                tb_generos AS g ON l.id_genero = g.id_genero
+            ORDER BY 
+                l.existencias ASC';
+
+        // Llamar al método getRows de la clase Database para ejecutar la consulta.
         return Database::getRows($sql);
     }
 
+    /*
+     * Método para obtener el total de libros en inventario, sus existencias y el valor del inventario.
+     */
     public function obtenerTotalLibros()
     {
-        $sql = 'SELECT COUNT(*) AS total_libros, 
+        // Definir la consulta SQL para obtener el total de libros, existencias y valor del inventario.
+        $sql = 'SELECT 
+                COUNT(*) AS total_libros, 
                 SUM(existencias) AS total_existencias,
                 SUM(existencias * precio) AS valor_inventario
-                FROM tb_libros';
+            FROM 
+                tb_libros';
+
+        // Llamar al método getRow de la clase Database para ejecutar la consulta.
         return Database::getRow($sql);
     }
+
 }

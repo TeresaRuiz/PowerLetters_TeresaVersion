@@ -106,16 +106,32 @@ class GeneroHandler
         return Database::executeRow($sql, $params);
     }
 
+    /*
+     * Método para obtener los 5 libros más vendidos de un género específico.
+     */
     public function getTopLibrosPorGenero()
     {
-        $sql = 'SELECT l.titulo, COUNT(d.id_libro) as total_ventas
-        FROM tb_libros l
-        JOIN tb_detalle_pedidos d ON l.id_libro = d.id_libro
-        WHERE l.id_genero = ?
-        GROUP BY l.id_libro
-        ORDER BY total_ventas DESC
-        LIMIT 5';
+        // Definir la consulta SQL para obtener los 5 libros más vendidos de un género.
+        $sql = 'SELECT 
+                l.titulo, 
+                COUNT(d.id_libro) AS total_ventas
+            FROM 
+                tb_libros l
+            JOIN 
+                tb_detalle_pedidos d ON l.id_libro = d.id_libro
+            WHERE 
+                l.id_genero = ?
+            GROUP BY 
+                l.id_libro
+            ORDER BY 
+                total_ventas DESC
+            LIMIT 5';
+
+        // Establecer los parámetros para la consulta (ID del género).
         $params = array($this->id);
+
+        // Ejecutar la consulta y devolver las filas resultantes.
         return Database::getRows($sql, $params);
     }
+
 }

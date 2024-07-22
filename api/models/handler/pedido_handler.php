@@ -81,47 +81,90 @@ class PedidoHandler
     }
 
 
-    // Método para obtener los productos que se encuentran en el carrito de compras.
+    /*
+     * Método para obtener los productos que se encuentran en el carrito de compras.
+     */
     public function readDetail()
     {
-        $sql = 'SELECT dp.id_detalle, l.titulo AS nombre_producto, dp.precio, dp.cantidad
-            FROM tb_detalle_pedidos AS dp
-            INNER JOIN tb_pedidos AS p ON dp.id_pedido = p.id_pedido
-            INNER JOIN tb_libros AS l ON dp.id_libro = l.id_libro
-            WHERE p.id_pedido = ?';
+        // Definir la consulta SQL para obtener los detalles del pedido (productos en el carrito).
+        $sql = 'SELECT 
+                dp.id_detalle, 
+                l.titulo AS nombre_producto, 
+                dp.precio, 
+                dp.cantidad
+            FROM 
+                tb_detalle_pedidos AS dp
+            INNER JOIN 
+                tb_pedidos AS p ON dp.id_pedido = p.id_pedido
+            INNER JOIN 
+                tb_libros AS l ON dp.id_libro = l.id_libro
+            WHERE 
+                p.id_pedido = ?';
+
+        // Establecer los parámetros para la consulta (ID del pedido).
         $params = array($_SESSION['idPedido']);
+
+        // Llamar al método getRows de la clase Database para ejecutar la consulta y devolver los detalles del pedido.
         return Database::getRows($sql, $params);
     }
 
-
-
+    /*
+     * Método para finalizar el pedido.
+     */
     public function finishOrder()
     {
+        // Establecer el estado del pedido a 'FINALIZADO'.
         $this->estado = 'FINALIZADO';
-        $sql = 'UPDATE tb_pedidos
-        SET estado = ?, fecha_pedido = NOW()
-        WHERE id_pedido = ?';
+
+        // Definir la consulta SQL para actualizar el estado del pedido y establecer la fecha de pedido actual.
+        $sql = 'UPDATE 
+                tb_pedidos
+            SET 
+                estado = ?, 
+                fecha_pedido = NOW()
+            WHERE 
+                id_pedido = ?';
+
+        // Establecer los parámetros para la consulta (estado y ID del pedido).
         $params = array($this->estado, $_SESSION['idPedido']);
+
+        // Llamar al método executeRow de la clase Database para ejecutar la actualización del pedido.
         return Database::executeRow($sql, $params);
     }
 
-    // Método para leer el historial de pedidos finalizados
-
+    /*
+     * Método para leer el historial de pedidos finalizados y entregados.
+     */
     public function readHistorial($idUsuario)
     {
-        $sql = 'SELECT p.id_pedido, p.fecha_pedido, p.direccion_pedido, p.estado, 
-                   l.titulo AS nombre_libro, dp.precio, dp.cantidad, 
-                   (dp.precio * dp.cantidad) AS subtotal
-            FROM tb_pedidos AS p
-            INNER JOIN tb_detalle_pedidos AS dp ON p.id_pedido = dp.id_pedido
-            INNER JOIN tb_libros AS l ON dp.id_libro = l.id_libro
-            WHERE p.id_usuario = ? AND p.estado IN ("FINALIZADO", "ENTREGADO")
-            ORDER BY p.fecha_pedido DESC';
+        // Definir la consulta SQL para obtener el historial de pedidos finalizados y entregados.
+        $sql = 'SELECT 
+                p.id_pedido, 
+                p.fecha_pedido, 
+                p.direccion_pedido, 
+                p.estado, 
+                l.titulo AS nombre_libro, 
+                dp.precio, 
+                dp.cantidad, 
+                (dp.precio * dp.cantidad) AS subtotal
+            FROM 
+                tb_pedidos AS p
+            INNER JOIN 
+                tb_detalle_pedidos AS dp ON p.id_pedido = dp.id_pedido
+            INNER JOIN 
+                tb_libros AS l ON dp.id_libro = l.id_libro
+            WHERE 
+                p.id_usuario = ? 
+                AND p.estado IN ("FINALIZADO", "ENTREGADO")
+            ORDER BY 
+                p.fecha_pedido DESC';
+
+        // Establecer los parámetros para la consulta (ID del usuario).
         $params = array($idUsuario);
+
+        // Llamar al método getRows de la clase Database para ejecutar la consulta y devolver el historial de pedidos.
         return Database::getRows($sql, $params);
     }
-
-
 
     // Método para actualizar la cantidad de un producto agregado al carrito de compras.
     public function updateDetail()
@@ -309,118 +352,179 @@ class PedidoHandler
         // Ejecutar la consulta y devolver el resultado
         return Database::executeRow($sql, $params);
     }
-
+    /*
+     * Método para eliminar un detalle del pedido.
+     */
     public function deleteDetail()
     {
+        // Definir la consulta SQL para eliminar un detalle específico del pedido.
         $sql = 'DELETE FROM tb_detalle_pedidos
             WHERE id_detalle = ? AND id_pedido = ?';
+
+        // Establecer los parámetros para la consulta (ID del detalle y ID del pedido).
         $params = array($this->id_detalle, $_SESSION['idPedido']);
+
+        // Llamar al método executeRow de la clase Database para ejecutar la eliminación del detalle del pedido.
         return Database::executeRow($sql, $params);
     }
 
+    /*
+     * Método para obtener la distribución de pedidos por estado.
+     */
     public function readDistribucionPedidosPorEstado()
     {
+        // Definir la consulta SQL para obtener la cantidad de pedidos por estado.
         $sql = 'SELECT estado, COUNT(id_pedido) AS cantidad
-                FROM tb_pedidos
-                GROUP BY estado';
+            FROM tb_pedidos
+            GROUP BY estado';
+
+        // Llamar al método getRows de la clase Database para ejecutar la consulta y devolver la distribución de pedidos por estado.
         return Database::getRows($sql);
     }
 
+    /*
+     * Método para obtener la evolución de los pedidos por estado de un usuario específico.
+     */
     public function readEvolucionPedidosPorEstadoPorUsuario()
     {
+        // Definir la consulta SQL para obtener la cantidad de pedidos por estado de un usuario específico.
         $sql = 'SELECT estado, COUNT(id_pedido) AS total_pedidos
-                FROM tb_pedidos
-                WHERE id_usuario = ?
-                GROUP BY estado
-                ORDER BY total_pedidos DESC';
+            FROM tb_pedidos
+            WHERE id_usuario = ?
+            GROUP BY estado
+            ORDER BY total_pedidos DESC';
+
+        // Establecer los parámetros para la consulta (ID del usuario).
         $params = array($this->id_usuario);
-        return Database::getRows($sql, $params);
-    }
-    
-    public function ventasPorPeriodo()
-    {
-        $sql = 'SELECT p.fecha_pedido, u.nombre_usuario, u.apellido_usuario, 
-                SUM(dp.cantidad * dp.precio) AS total_venta
-                FROM tb_pedidos p
-                INNER JOIN tb_usuarios u ON p.id_usuario = u.id_usuario
-                INNER JOIN tb_detalle_pedidos dp ON p.id_pedido = dp.id_pedido
-                WHERE p.fecha_pedido BETWEEN ? AND ?
-                AND p.estado = "FINALIZADO"
-                GROUP BY p.id_pedido
-                ORDER BY p.fecha_pedido';
-        $params = array($this->fechaInicio, $this->fechaFin);
+
+        // Llamar al método getRows de la clase Database para ejecutar la consulta y devolver la evolución de los pedidos por estado.
         return Database::getRows($sql, $params);
     }
 
+    /*
+     * Método para obtener las ventas por período.
+     */
+    public function ventasPorPeriodo()
+    {
+        // Definir la consulta SQL para obtener las ventas por período.
+        $sql = 'SELECT p.fecha_pedido, u.nombre_usuario, u.apellido_usuario, 
+                   SUM(dp.cantidad * dp.precio) AS total_venta
+            FROM tb_pedidos p
+            INNER JOIN tb_usuarios u ON p.id_usuario = u.id_usuario
+            INNER JOIN tb_detalle_pedidos dp ON p.id_pedido = dp.id_pedido
+            WHERE p.fecha_pedido BETWEEN ? AND ?
+              AND p.estado = "FINALIZADO"
+            GROUP BY p.id_pedido
+            ORDER BY p.fecha_pedido';
+
+        // Establecer los parámetros para la consulta (fechas de inicio y fin del período).
+        $params = array($this->fechaInicio, $this->fechaFin);
+
+        // Llamar al método getRows de la clase Database para ejecutar la consulta y devolver las ventas por período.
+        return Database::getRows($sql, $params);
+    }
+
+    /*
+     * Método para obtener el total de ventas y pedidos por período.
+     */
     public function totalVentasYPedidos()
     {
+        // Definir la consulta SQL para obtener el número total de pedidos y el total de ventas por período.
         $sql = 'SELECT COUNT(DISTINCT p.id_pedido) AS numero_pedidos,
-                SUM(dp.cantidad * dp.precio) AS total_ventas
-                FROM tb_pedidos p
-                INNER JOIN tb_detalle_pedidos dp ON p.id_pedido = dp.id_pedido
-                WHERE p.fecha_pedido BETWEEN ? AND ?
-                AND p.estado = "FINALIZADO"';
+                   SUM(dp.cantidad * dp.precio) AS total_ventas
+            FROM tb_pedidos p
+            INNER JOIN tb_detalle_pedidos dp ON p.id_pedido = dp.id_pedido
+            WHERE p.fecha_pedido BETWEEN ? AND ?
+              AND p.estado = "FINALIZADO"';
+
+        // Establecer los parámetros para la consulta (fechas de inicio y fin del período).
         $params = array($this->fechaInicio, $this->fechaFin);
+
+        // Llamar al método getRow de la clase Database para ejecutar la consulta y devolver el total de ventas y pedidos.
         return Database::getRow($sql, $params);
     }
 
+    /*
+     * Método para obtener los libros más vendidos por período.
+     */
     public function librosMasVendidos()
     {
+        // Definir la consulta SQL para obtener los libros más vendidos por período.
         $sql = 'SELECT l.titulo, SUM(dp.cantidad) AS total_vendido
-                FROM tb_libros l
-                INNER JOIN tb_detalle_pedidos dp ON l.id_libro = dp.id_libro
-                INNER JOIN tb_pedidos p ON dp.id_pedido = p.id_pedido
-                WHERE p.fecha_pedido BETWEEN ? AND ?
-                AND p.estado = "FINALIZADO"
-                GROUP BY l.id_libro
-                ORDER BY total_vendido DESC
-                LIMIT 5';
+            FROM tb_libros l
+            INNER JOIN tb_detalle_pedidos dp ON l.id_libro = dp.id_libro
+            INNER JOIN tb_pedidos p ON dp.id_pedido = p.id_pedido
+            WHERE p.fecha_pedido BETWEEN ? AND ?
+              AND p.estado = "FINALIZADO"
+            GROUP BY l.id_libro
+            ORDER BY total_vendido DESC
+            LIMIT 5';
+
+        // Establecer los parámetros para la consulta (fechas de inicio y fin del período).
         $params = array($this->fechaInicio, $this->fechaFin);
+
+        // Llamar al método getRows de la clase Database para ejecutar la consulta y devolver los libros más vendidos.
         return Database::getRows($sql, $params);
     }
 
+    /*
+     * Método para obtener los pedidos pendientes.
+     */
     public function obtenerPedidosPendientes()
     {
+        // Definir la consulta SQL para obtener los pedidos pendientes.
         $sql = 'SELECT 
-            p.id_pedido,
-            p.fecha_pedido,
-            u.nombre_usuario,
-            u.apellido_usuario,
-            p.direccion_pedido,
-            SUM(dp.cantidad * dp.precio) AS total_pedido
-        FROM 
-            tb_pedidos p
-        INNER JOIN 
-            tb_usuarios u ON p.id_usuario = u.id_usuario
-        INNER JOIN 
-            tb_detalle_pedidos dp ON p.id_pedido = dp.id_pedido
-        WHERE 
-            p.estado = "PENDIENTE"
-        GROUP BY 
-            p.id_pedido
-        ORDER BY 
-            p.fecha_pedido DESC';
+                p.id_pedido,
+                p.fecha_pedido,
+                u.nombre_usuario,
+                u.apellido_usuario,
+                p.direccion_pedido,
+                SUM(dp.cantidad * dp.precio) AS total_pedido
+            FROM 
+                tb_pedidos p
+            INNER JOIN 
+                tb_usuarios u ON p.id_usuario = u.id_usuario
+            INNER JOIN 
+                tb_detalle_pedidos dp ON p.id_pedido = dp.id_pedido
+            WHERE 
+                p.estado = "PENDIENTE"
+            GROUP BY 
+                p.id_pedido
+            ORDER BY 
+                p.fecha_pedido DESC';
+
+        // Llamar al método getRows de la clase Database para ejecutar la consulta y devolver los pedidos pendientes.
         return Database::getRows($sql);
     }
 
+    /*
+     * Método para obtener el total de pedidos pendientes.
+     */
     public function obtenerTotalPedidosPendientes()
     {
+        // Definir la consulta SQL para obtener el total de pedidos y el valor total de los pedidos pendientes.
         $sql = 'SELECT 
-            COUNT(DISTINCT p.id_pedido) AS total_pedidos,
-            SUM(dp.cantidad * dp.precio) AS valor_total_pendiente
-        FROM 
-            tb_pedidos p
-        INNER JOIN 
-            tb_detalle_pedidos dp ON p.id_pedido = dp.id_pedido
-        WHERE 
-            p.estado = "PENDIENTE"';
+                COUNT(DISTINCT p.id_pedido) AS total_pedidos,
+                SUM(dp.cantidad * dp.precio) AS valor_total_pendiente
+            FROM 
+                tb_pedidos p
+            INNER JOIN 
+                tb_detalle_pedidos dp ON p.id_pedido = dp.id_pedido
+            WHERE 
+                p.estado = "PENDIENTE"';
+
+        // Llamar al método getRow de la clase Database para ejecutar la consulta y devolver el total de pedidos pendientes.
         return Database::getRow($sql);
     }
 
-    // Método para obtener los productos del último pedido finalizado realizado por el usuario y los datos del usuario.
+    /*
+     * Método para obtener los productos del último pedido finalizado realizado por el usuario y los datos del usuario.
+     */
     public function readDetailReport()
     {
-        $sql = 'SELECT u.nombre_usuario AS NOMBRE_USUARIO,
+        // Definir la consulta SQL para obtener los detalles del último pedido finalizado realizado por el usuario.
+        $sql = 'SELECT 
+                u.nombre_usuario AS NOMBRE_USUARIO,
                 u.apellido_usuario AS APELLIDO_USUARIO,
                 u.correo_usuario AS CORREO,
                 u.telefono_usuario AS TELEFONO,
@@ -443,42 +547,58 @@ class PedidoHandler
                 ORDER BY id_pedido DESC
                 LIMIT 1
             );';
+
+        // Establecer los parámetros para la consulta (ID del usuario).
         $params = array($_SESSION['idUsuario']);
+
+        // Llamar al método getRows de la clase Database para ejecutar la consulta y devolver los detalles del último pedido finalizado.
         return Database::getRows($sql, $params);
     }
 
+    /*
+     * Método para obtener todos los usuarios únicos que han realizado pedidos.
+     */
     public function readAllUniqueUsers()
     {
+        // Definir la consulta SQL para obtener todos los usuarios únicos que han realizado pedidos.
         $sql = 'SELECT DISTINCT
-                    u.id_usuario,
-                    u.nombre_usuario,
-                    (SELECT MAX(fecha_pedido) FROM tb_pedidos WHERE id_usuario = u.id_usuario) AS ultima_fecha_pedido
-                FROM
-                    tb_usuarios AS u
-                INNER JOIN
-                    tb_pedidos AS p ON u.id_usuario = p.id_usuario
-                ORDER BY
-                    ultima_fecha_pedido DESC';
+                u.id_usuario,
+                u.nombre_usuario,
+                (SELECT MAX(fecha_pedido) FROM tb_pedidos WHERE id_usuario = u.id_usuario) AS ultima_fecha_pedido
+            FROM
+                tb_usuarios AS u
+            INNER JOIN
+                tb_pedidos AS p ON u.id_usuario = p.id_usuario
+            ORDER BY
+                ultima_fecha_pedido DESC';
 
+        // Llamar al método getRows de la clase Database para ejecutar la consulta y devolver los usuarios únicos.
         return Database::getRows($sql);
     }
 
-    // Método para obtener todos los pedidos de un usuario específico
+    /*
+     * Método para obtener todos los pedidos de un usuario específico.
+     */
     public function readPedidosByUser()
     {
+        // Definir la consulta SQL para obtener todos los pedidos de un usuario específico.
         $sql = 'SELECT
-                    p.id_pedido,
-                    p.direccion_pedido,
-                    p.estado,
-                    p.fecha_pedido
-                FROM
-                    tb_pedidos AS p
-                WHERE
-                    p.id_usuario = ?
-                ORDER BY
-                    p.fecha_pedido DESC';
+                p.id_pedido,
+                p.direccion_pedido,
+                p.estado,
+                p.fecha_pedido
+            FROM
+                tb_pedidos AS p
+            WHERE
+                p.id_usuario = ?
+            ORDER BY
+                p.fecha_pedido DESC';
 
+        // Establecer los parámetros para la consulta (ID del usuario).
         $params = array($this->id_usuario);
+
+        // Llamar al método getRows de la clase Database para ejecutar la consulta y devolver los pedidos del usuario.
         return Database::getRows($sql, $params);
     }
+
 }

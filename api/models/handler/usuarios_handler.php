@@ -21,8 +21,7 @@ class UsuarioHandler
     protected $estado = null;
     protected $imagen = null;
 
-
-
+    //Establecer donde se guardaran imagenes de usuarios
     const RUTA_IMAGEN = '../../images/usuarios/';
 
     /*
@@ -60,16 +59,25 @@ class UsuarioHandler
         }
     }
 
+    /*
+     * Método para verificar el estado del usuario y establecer variables de sesión.
+     */
     public function checkStatus()
     {
+        // Verificar si el estado del usuario está definido y es verdadero.
         if ($this->estado) {
+            // Si el estado es verdadero, establecer las variables de sesión con el ID y correo del usuario.
             $_SESSION['idUsuario'] = $this->id;
             $_SESSION['correoUsuario'] = $this->correo;
+
+            // Devolver verdadero indicando que el estado es válido.
             return true;
         } else {
+            // Si el estado no es verdadero, devolver falso indicando que el estado no es válido.
             return false;
         }
     }
+
     /*
      *   Métodos para cambiar la contraseña
      */
@@ -191,6 +199,7 @@ class UsuarioHandler
         return Database::executeRow($sql, $params);
     }
 
+    //Metodo para validar que no se ingresen datos iguales
     public function checkDuplicate($value)
     {
         $sql = 'SELECT id_usuario
@@ -199,7 +208,7 @@ class UsuarioHandler
         $params = array($value, $value);
         return Database::getRow($sql, $params);
     }
-
+    //Metodo para leer las imagenes
     public function readFilename()
     {
         $sql = 'SELECT imagen FROM tb_usuarios WHERE id_usuario = ?';
@@ -207,22 +216,27 @@ class UsuarioHandler
         return Database::getRow($sql, $params);
     }
 
-    // Método para obtener los usuarios registrados por mes y agregar where del año actual 
+    // Método para obtener los usuarios registrados por mes del año actual
     public function readUsuariosPorMes()
     {
+        // Consulta SQL para obtener el número de usuarios registrados por mes en el año 2024
         $sql = 'SELECT ELT(MONTH(fecha_registro), "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre") AS mes, 
                COUNT(*) AS total
-        FROM tb_usuarios
-        WHERE YEAR(fecha_registro) = 2024
-        GROUP BY mes
-        ORDER BY MIN(fecha_registro) ASC';
+            FROM tb_usuarios
+            WHERE YEAR(fecha_registro) = 2024
+            GROUP BY mes
+            ORDER BY MIN(fecha_registro) ASC';
+
+        // Ejecutar la consulta y devolver las filas resultantes
         return Database::getRows($sql);
     }
 
+    // Método para obtener los clientes frecuentes y sus estadísticas
     public function clientesFrecuentes()
     {
+        // Consulta SQL para obtener los usuarios con el mayor número de pedidos finalizados y el monto total de sus compras
         $sql = 'SELECT u.nombre_usuario, u.apellido_usuario, COUNT(p.id_pedido) AS total_pedidos,
-            SUM(dp.cantidad * dp.precio) AS monto_total
+                   SUM(dp.cantidad * dp.precio) AS monto_total
             FROM tb_usuarios u
             INNER JOIN tb_pedidos p ON u.id_usuario = p.id_usuario
             INNER JOIN tb_detalle_pedidos dp ON p.id_pedido = dp.id_pedido
@@ -230,10 +244,15 @@ class UsuarioHandler
             GROUP BY u.id_usuario
             ORDER BY total_pedidos DESC
             LIMIT 10';
+
+        // Ejecutar la consulta y devolver las filas resultantes
         return Database::getRows($sql);
     }
+
+    // Método para obtener el número de usuarios activos e inactivos
     public function getUsuariosActivosInactivos()
     {
+        // Consulta SQL para contar los usuarios activos e inactivos agrupados por su estado
         $sql = 'SELECT 
                 CASE 
                     WHEN estado_cliente = 1 THEN "activos" 
@@ -243,7 +262,9 @@ class UsuarioHandler
             FROM tb_usuarios
             GROUP BY estado_usuario';
 
+        // Ejecutar la consulta y devolver las filas resultantes
         return Database::getRows($sql);
     }
+
 
 }

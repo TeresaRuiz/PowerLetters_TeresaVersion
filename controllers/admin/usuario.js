@@ -1,5 +1,5 @@
 // Se establece la ruta de la API para interactuar con los usuarios.
-const USUARIO_API = 'services/public/usuario.php';
+const USUARIO_API = 'services/admin/usuario_admin.php';
 
 // Se obtienen referencias a los elementos del DOM necesarios.
 const SEARCH_FORM = document.getElementById('searchForm'); // Formulario de búsqueda.

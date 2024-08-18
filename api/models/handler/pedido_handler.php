@@ -88,7 +88,8 @@ class PedidoHandler
     {
         // Definir la consulta SQL para obtener los detalles del pedido (productos en el carrito).
         $sql = 'SELECT 
-                dp.id_detalle, 
+                dp.id_detalle,
+                l.imagen, 
                 l.titulo AS nombre_producto, 
                 dp.precio, 
                 dp.cantidad

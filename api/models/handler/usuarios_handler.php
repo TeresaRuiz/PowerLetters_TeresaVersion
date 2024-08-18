@@ -1,6 +1,6 @@
 <?php
 // Se incluye la clase para trabajar con la base de datos.
-require_once ('../../helpers/database.php');
+require_once('../../helpers/database.php');
 /*
  *	Clase para manejar el comportamiento de los datos de la tabla usuario.
  */
@@ -264,6 +264,14 @@ class UsuarioHandler
 
         // Ejecutar la consulta y devolver las filas resultantes
         return Database::getRows($sql);
+    }
+    public function readOneCorreo($correo)
+    {
+        $sql = 'SELECT id_usuario, nombre_usuario, apellido_usuario, correo_usuario, dui_usuario, telefono_usuario, nacimiento_usuario, direccion_usuario, estado_cliente
+        FROM tb_usuarios
+        WHERE correo_usuario = ?';
+        $params = array($correo);
+        return Database::getRow($sql, $params);
     }
 
 

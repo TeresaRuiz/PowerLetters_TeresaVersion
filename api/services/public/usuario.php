@@ -1,6 +1,6 @@
 <?php
 // Se incluye la clase del modelo.
-require_once ('../../models/data/usuario_data.php');
+require_once('../../models/data/usuario_data.php');
 
 // Se comprueba si existe una acción a realizar, de lo contrario se finaliza el script con un mensaje de error.
 if (isset($_GET['action'])) {
@@ -15,6 +15,24 @@ if (isset($_GET['action'])) {
         $result['session'] = 1;
         // Se compara la acción a realizar cuando un usuario ha iniciado sesión.
         switch ($_GET['action']) {
+            case 'getUser':
+                if (isset($_SESSION['correoUsuario'])) {
+                    $result['status'] = 1;
+                    $result['username'] = $_SESSION['correoUsuario'];
+                    $result['name'] = $usuario->readOneCorreo($_SESSION['correoUsuario']);
+                } else {
+                    $result['error'] = 'Correo de usuario indefinido';
+                    $result['name'] = 'No se pudo obtener el usuario';
+                }
+                break;
+            case 'logOut':
+                if (session_destroy()) {
+                    $result['status'] = 1;
+                    $result['message'] = 'Sesión eliminada correctamente';
+                } else {
+                    $result['error'] = 'Ocurrió un problema al cerrar la sesión';
+                }
+                break;
             case 'searchRows':
                 if (!Validator::validateSearch($_POST['search'])) {
                     $result['error'] = Validator::getSearchError();
@@ -91,22 +109,6 @@ if (isset($_GET['action'])) {
                     $result['error'] = 'Ocurrió un problema al eliminar el usuario';
                 }
                 break;
-            case 'getUser':
-                if (isset($_SESSION['correoUsuario'])) {
-                    $result['status'] = 1;
-                    $result['username'] = $_SESSION['correoUsuario'];
-                } else {
-                    $result['error'] = 'Correo de usuario indefinido';
-                }
-                break;
-            case 'logOut':
-                if (session_destroy()) {
-                    $result['status'] = 1;
-                    $result['message'] = 'Sesión eliminada correctamente';
-                } else {
-                    $result['error'] = 'Ocurrió un problema al cerrar la sesión';
-                }
-                break;
             case 'readProfile':
                 if ($result['dataset'] = $usuario->readProfile()) {
                     $result['status'] = 1;
@@ -165,6 +167,43 @@ if (isset($_GET['action'])) {
                     $result['error'] = 'No hay usuarios registrados por el momento';
                 }
                 break;
+            case 'updateClient':
+                $_POST = Validator::validateForm($_POST);
+                if (
+                    !$usuario->setNombre($_POST['nombre_usuario']) or
+                    !$usuario->setApellido($_POST['apellido_usuario']) or
+                    !$usuario->setCorreo($_POST['correo_usuario']) or
+                    !$usuario->setDireccion($_POST['direccion_usuario']) or
+                    !$usuario->setDUI($_POST['dui_usuario']) or
+                    !$usuario->setNacimiento($_POST['nacimiento_usuario']) or
+                    !$usuario->setTelefono($_POST['telefono_usuario']) or
+                    !$usuario->setImagen($_FILES['imagen']) or
+                    !$usuario->setClave($_POST['clave_usuario'])
+                ) {
+                    $result['error'] = $usuario->getDataError();
+                } elseif ($usuario->updateRow()) {
+                    $result['status'] = 1;
+                    $result['message'] = 'Usuario modificado correctamente';
+                } else {
+                    $result['error'] = 'Ocurrió un problema al modificar el administrador';
+                }
+                break;
+                case 'getClientData':
+                    if (isset($_SESSION['idUsuario'])) {
+                        $result['session'] = 1; // Verifica si el usuario ha iniciado sesión
+                        $usuarioId = $_SESSION['idUsuario'];
+                
+                        // Intenta obtener los datos del usuario
+                        if ($result['dataset'] = $usuario->readOneCorreo($usuarioId)) {
+                            $result['status'] = 1;
+                            $result['message'] = 'Datos del usuario obtenidos correctamente';
+                        } else {
+                            $result['error'] = 'No se pudo obtener los datos del usuario';
+                        }
+                    } else {
+                        $result['error'] = 'No hay sesión activa';
+                    }
+                    break;
             default:
                 $result['error'] = 'Acción no disponible dentro de la sesión';
         }
@@ -225,6 +264,29 @@ if (isset($_GET['action'])) {
                     $result['message'] = 'Autenticación correcta';
                 } else {
                     $result['error'] = 'La cuenta ha sido desactivada';
+                }
+                break;
+
+            case 'signUpMovil':
+                $_POST = Validator::validateForm($_POST);
+                if (
+                    !$usuario->setNombre($_POST['nombre_usuario']) or
+                    !$usuario->setApellido($_POST['apellido_usuario']) or
+                    !$usuario->setCorreo($_POST['correo_usuario']) or
+                    !$usuario->setDireccion($_POST['direccion_usuario']) or
+                    !$usuario->setDUI($_POST['dui_usuario']) or
+                    !$usuario->setNacimiento($_POST['nacimiento_usuario']) or
+                    !$usuario->setTelefono($_POST['telefono_usuario']) or
+                    !$usuario->setClave($_POST['clave_usuario'])
+                ) {
+                    $result['error'] = $usuario->getDataError();
+                } elseif ($_POST['clave_usuario'] != $_POST['confirmarClave']) {
+                    $result['error'] = 'Contraseñas diferentes';
+                } elseif ($usuario->createRow()) {
+                    $result['status'] = 1;
+                    $result['message'] = 'Cuenta registrada correctamente';
+                } else {
+                    $result['error'] = 'Ocurrió un problema al registrar la cuenta';
                 }
                 break;
             default:

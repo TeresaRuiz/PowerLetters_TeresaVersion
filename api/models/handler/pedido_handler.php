@@ -143,6 +143,7 @@ class PedidoHandler
                 p.fecha_pedido, 
                 p.direccion_pedido, 
                 p.estado, 
+                l.imagen,
                 l.titulo AS nombre_libro, 
                 dp.precio, 
                 dp.cantidad, 

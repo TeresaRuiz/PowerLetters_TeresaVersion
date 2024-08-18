@@ -1,6 +1,7 @@
 <?php
 // Se incluye la clase del modelo.
 require_once('../../models/data/usuario_data.php');
+require_once('../../services/admin/mail_config.php');
 
 // Se comprueba si existe una acción a realizar, de lo contrario se finaliza el script con un mensaje de error.
 if (isset($_GET['action'])) {
@@ -251,6 +252,82 @@ if (isset($_GET['action'])) {
                     $result['error'] = 'Ocurrió un problema al registrar la cuenta';
                 }
                 break;
+            //Metodos para recuperación de contraseña en movil
+            case 'solicitarPinRecuperacion':
+                $_POST = Validator::validateForm($_POST);
+                if (!isset($_POST['correo'])) {
+                    $result['error'] = 'Falta el correo electrónico';
+                } elseif (!$usuario->setCorreos($_POST['correo'])) {
+                    $result['error'] = 'Correo electrónico inválido';
+                } else {
+                    // Verificar si el correo existe en la base de datos
+                    $checkCorreoSql = 'SELECT COUNT(*) as count, nombre_usuario FROM tb_usuarios WHERE correo_usuario = ?';
+                    $checkCorreoParams = array($_POST['correo']);
+                    $checkCorreoResult = Database::getRow($checkCorreoSql, $checkCorreoParams);
+
+                    if ($checkCorreoResult['count'] == 0) {
+                        $result['error'] = 'No existe una cuenta asociada a este correo electrónico';
+                    } elseif ($pin = $usuario->generarPinRecuperacion($_POST['correo'])) {
+                        $result['status'] = 1;
+                        $result['message'] = 'PIN generado con éxito';
+
+                        // Enviar correo con el PIN
+                        $email = $_POST['correo'];
+                        $nombre = $checkCorreoResult['nombre_usuario'];
+                        $subject = "Recuperacion de clave - Power Letters";
+                        $body = "
+                            <p>Estimado/a {$nombre},</p>
+                            <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en Power Letters.</p>
+                            <p>Tu PIN de recuperación es: <strong>{$pin}</strong></p>
+                            <p>Este PIN es válido por los próximos 30 minutos. Si no solicitaste este cambio, por favor ignora este mensaje.</p>
+                            <p>Para completar el proceso de recuperación de contraseña, ingresa este PIN en la aplicación.</p>
+                            <p>Si tienes alguna pregunta o necesitas ayuda adicional, no dudes en contactarnos.</p>
+                            <p>Saludos cordiales,<br>
+                            El equipo de Power Letters$</p>
+                        ";
+
+                        $emailResult = sendEmail($email, $subject, $body);
+                        if ($emailResult !== true) {
+                            $result['message'] .= ' Sin embargo, no se pudo enviar el correo con el PIN.';
+                        }
+                    } else {
+                        $result['error'] = 'No se pudo generar el PIN';
+                    }
+                }
+                break;
+            case 'verificarPin':
+                if (!isset($_POST['correo']) || !isset($_POST['pin'])) {
+                    $result['error'] = 'Faltan datos necesarios';
+                } elseif (!$usuario->setCorreo($_POST['correo'])) {
+                    $result['error'] = 'Correo electrónico inválido';
+                } else {
+                    $id_usuario = $usuario->verificarPinRecuperacion($_POST['pin']);
+                    if ($id_usuario) {
+                        $result['status'] = 1;
+                        $result['id_usuario'] = $id_usuario;
+                        $result['message'] = 'PIN verificado correctamente';
+                    } else {
+                        $result['error'] = 'PIN inválido o expirado';
+                    }
+                }
+                break;
+            case 'cambiarClaveConPin':
+                $_POST = Validator::validateForm($_POST);
+                if (!isset($_POST['id_usuario']) || !isset($_POST['nuevaClave'])) {
+                    $result['error'] = 'Faltan datos necesarios';
+                } else {
+                    $id_usuario = $_POST['id_usuario'];
+                    $nuevaClave = $_POST['nuevaClave'];
+                    if ($usuario->cambiarClaveConPin($id_usuario, $nuevaClave)) {
+                        $result['status'] = 1;
+                        $result['message'] = 'Contraseña cambiada exitosamente';
+                        $usuario->resetearPin(); // Resetea el PIN para que no se pueda usar nuevamente
+                    } else {
+                        $result['error'] = 'No se pudo cambiar la contraseña';
+                    }
+                }
+                break;
+
             default:
                 $result['error'] = 'Acción no disponible fuera de la sesión';
         }

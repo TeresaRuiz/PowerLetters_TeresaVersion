@@ -61,6 +61,25 @@ class GeneroHandler
         return Database::getRows($sql);
     }
 
+    public function readAllGenero()
+    {
+        // Definir la consulta SQL para obtener todos los registros
+        $sql = 'SELECT 
+    g.id_genero,
+    g.nombre AS nombre_genero
+    FROM 
+    tb_generos g
+    INNER JOIN
+    tb_libros l ON g.id_genero = l.id_genero
+    GROUP BY 
+    g.id_genero, g.nombre
+    HAVING
+    COUNT(l.id_libro) > 0';
+
+        // Ejecutar la consulta y devolver las filas resultantes
+        return Database::getRows($sql);
+    }
+
     /*
      * Método para leer una fila específica de tb_generos por id.
      */

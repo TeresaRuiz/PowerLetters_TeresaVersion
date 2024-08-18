@@ -125,8 +125,7 @@ if (isset($_GET['action'])) {
                     !$usuario->setDireccion($_POST['direccion_usuario']) or
                     !$usuario->setDUI($_POST['dui_usuario']) or
                     !$usuario->setNacimiento($_POST['nacimiento_usuario']) or
-                    !$usuario->setTelefono($_POST['telefono_usuario']) or
-                    !$usuario->setImagen($_FILES['imagen'])
+                    !$usuario->setTelefono($_POST['telefono_usuario'])
                 ) {
                     $result['error'] = $usuario->getDataError();
                 } elseif ($usuario->editProfile()) {
@@ -167,43 +166,6 @@ if (isset($_GET['action'])) {
                     $result['error'] = 'No hay usuarios registrados por el momento';
                 }
                 break;
-            case 'updateClient':
-                $_POST = Validator::validateForm($_POST);
-                if (
-                    !$usuario->setNombre($_POST['nombre_usuario']) or
-                    !$usuario->setApellido($_POST['apellido_usuario']) or
-                    !$usuario->setCorreo($_POST['correo_usuario']) or
-                    !$usuario->setDireccion($_POST['direccion_usuario']) or
-                    !$usuario->setDUI($_POST['dui_usuario']) or
-                    !$usuario->setNacimiento($_POST['nacimiento_usuario']) or
-                    !$usuario->setTelefono($_POST['telefono_usuario']) or
-                    !$usuario->setImagen($_FILES['imagen']) or
-                    !$usuario->setClave($_POST['clave_usuario'])
-                ) {
-                    $result['error'] = $usuario->getDataError();
-                } elseif ($usuario->updateRow()) {
-                    $result['status'] = 1;
-                    $result['message'] = 'Usuario modificado correctamente';
-                } else {
-                    $result['error'] = 'Ocurrió un problema al modificar el administrador';
-                }
-                break;
-                case 'getClientData':
-                    if (isset($_SESSION['idUsuario'])) {
-                        $result['session'] = 1; // Verifica si el usuario ha iniciado sesión
-                        $usuarioId = $_SESSION['idUsuario'];
-                
-                        // Intenta obtener los datos del usuario
-                        if ($result['dataset'] = $usuario->readOneCorreo($usuarioId)) {
-                            $result['status'] = 1;
-                            $result['message'] = 'Datos del usuario obtenidos correctamente';
-                        } else {
-                            $result['error'] = 'No se pudo obtener los datos del usuario';
-                        }
-                    } else {
-                        $result['error'] = 'No hay sesión activa';
-                    }
-                    break;
             default:
                 $result['error'] = 'Acción no disponible dentro de la sesión';
         }

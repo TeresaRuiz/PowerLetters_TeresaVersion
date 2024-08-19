@@ -1,6 +1,6 @@
 <?php
 // Se incluye la clase del modelo.
-require_once ('../../models/data/pedido_data.php');
+require_once('../../models/data/pedido_data.php');
 
 // Se comprueba si existe una acción a realizar, de lo contrario se finaliza el script con un mensaje de error.
 if (isset($_GET['action'])) {
@@ -16,6 +16,7 @@ if (isset($_GET['action'])) {
         // Se compara la acción a realizar cuando un cliente ha iniciado sesión.
         switch ($_GET['action']) {
             // Acción para agregar un producto al carrito de compras.
+            // Acción para agregar un producto al carrito de compras.
             case 'createDetail':
                 $_POST = Validator::validateForm($_POST);
                 if (!$pedido->startOrder()) {
@@ -25,15 +26,35 @@ if (isset($_GET['action'])) {
                     !$pedido->setCantidad($_POST['cantidadLibro'])
                 ) {
                     $result['error'] = $pedido->getDataError();
-                } elseif ($pedido->createDetail()) {
-                    $result['status'] = 1;
-                    $result['message'] = 'Libro agregado correctamente';
-                    $result['cliente'] = $_SESSION['idUsuario'];
-                    $result['pedido'] = $_SESSION['idPedido'];
                 } else {
-                    $result['error'] = 'Ocurrió un problema al agregar el libro';
+                    // Verificar existencias antes de agregar
+                    $sqlExistencias = 'SELECT existencias FROM tb_libros WHERE id_libro = ?';
+                    $paramsExistencias = array($_POST['idLibro']);
+                    $existenciasActuales = Database::getRow($sqlExistencias, $paramsExistencias)['existencias'];
+
+                    if ($_POST['cantidadLibro'] <= $existenciasActuales) {
+                        // Si la cantidad solicitada es válida, agregar el producto al pedido
+                        if ($pedido->createDetail()) {
+                            // Actualizar las existencias del libro
+                            $existenciasNuevas = $existenciasActuales - $_POST['cantidadLibro'];
+                            $sqlUpdateExistencias = 'UPDATE tb_libros SET existencias = ? WHERE id_libro = ?';
+                            $paramsUpdateExistencias = array($existenciasNuevas, $_POST['idLibro']);
+                            Database::executeRow($sqlUpdateExistencias, $paramsUpdateExistencias);
+
+                            $result['status'] = 1;
+                            $result['message'] = 'Libro agregado correctamente';
+                            $result['cliente'] = $_SESSION['idUsuario'];
+                            $result['pedido'] = $_SESSION['idPedido'];
+                        } else {
+                            $result['error'] = 'Ocurrió un problema al agregar el libro';
+                        }
+                    } else {
+                        // Si no hay suficientes existencias
+                        $result['error'] = 'No hay suficientes existencias para este producto.';
+                    }
                 }
                 break;
+
             // Acción para obtener los productos agregados en el carrito de compras.
             case 'readDetail':
                 if ($pedido->getOrder()) {
@@ -111,18 +132,39 @@ if (isset($_GET['action'])) {
 
 
             // Acción para remover un producto del carrito de compras.
+            // Acción para remover un producto del carrito de compras.
             case 'deleteDetail':
                 if (!$pedido->setIdDetalle($_POST['idDetalle'])) {
                     $result['error'] = $pedido->getDataError();
-                } elseif ($pedido->deleteDetail()) {
-                    $result['status'] = 1;
-                    $result['message'] = 'Libro removido correctamente';
-                    $result['cliente'] = $_SESSION['idUsuario'];
-                    $result['pedido'] = $_SESSION['idPedido'];
                 } else {
-                    $result['error'] = 'Ocurrió un problema al remover el producto';
+                    // Obtener la cantidad del producto antes de eliminarlo
+                    $sqlCantidad = 'SELECT cantidad, id_libro FROM tb_detalle_pedidos WHERE id_detalle = ?';
+                    $paramsCantidad = array($_POST['idDetalle']);
+                    $detalle = Database::getRow($sqlCantidad, $paramsCantidad);
+                    $cantidad = $detalle['cantidad'];
+                    $idLibro = $detalle['id_libro'];
+
+                    if ($pedido->deleteDetail()) {
+                        // Restaurar el stock en la tabla de libros
+                        $sqlExistencias = 'SELECT existencias FROM tb_libros WHERE id_libro = ?';
+                        $paramsExistencias = array($idLibro);
+                        $existenciasActuales = Database::getRow($sqlExistencias, $paramsExistencias)['existencias'];
+
+                        $existenciasNuevas = $existenciasActuales + $cantidad;
+                        $sqlUpdateExistencias = 'UPDATE tb_libros SET existencias = ? WHERE id_libro = ?';
+                        $paramsUpdateExistencias = array($existenciasNuevas, $idLibro);
+                        Database::executeRow($sqlUpdateExistencias, $paramsUpdateExistencias);
+
+                        $result['status'] = 1;
+                        $result['message'] = 'Libro removido correctamente';
+                        $result['cliente'] = $_SESSION['idUsuario'];
+                        $result['pedido'] = $_SESSION['idPedido'];
+                    } else {
+                        $result['error'] = 'Ocurrió un problema al remover el producto';
+                    }
                 }
                 break;
+
             // Acción para finalizar el carrito de compras.
             case 'finishOrder':
                 $result['cliente'] = $_SESSION['idUsuario'];
@@ -154,15 +196,15 @@ if (isset($_GET['action'])) {
                     $result['error'] = 'No se encontraron datos disponibles';
                 }
                 break;
-                case 'readEvolucionPedidosPorEstado':
-                    if (!$pedido->setId($_POST['idPedido'])) {
-                        $result['error'] = $pedido->getDataError();
-                    } elseif ($result['dataset'] = $pedido->readEvolucionPedidosPorEstado()) {
-                        $result['status'] = 1;
-                    } else {
-                        $result['error'] = 'No existen estados para los pedidos por el momento';
-                    }
-                    break;
+            case 'readEvolucionPedidosPorEstado':
+                if (!$pedido->setId($_POST['idPedido'])) {
+                    $result['error'] = $pedido->getDataError();
+                } elseif ($result['dataset'] = $pedido->readEvolucionPedidosPorEstado()) {
+                    $result['status'] = 1;
+                } else {
+                    $result['error'] = 'No existen estados para los pedidos por el momento';
+                }
+                break;
             default:
                 $result['error'] = 'Acción no disponible dentro de la sesión';
         }

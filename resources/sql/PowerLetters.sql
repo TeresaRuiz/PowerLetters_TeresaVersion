@@ -98,6 +98,21 @@ CREATE TABLE tb_comentarios (
     CONSTRAINT fk_comentario_detalle FOREIGN KEY (id_detalle) REFERENCES tb_detalle_pedidos(id_detalle)
 );
 
+CREATE TABLE tb_historial_pedidos (
+    id_historial INT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario INT,
+    id_pedido INT,
+    fecha_historial DATETIME DEFAULT CURRENT_TIMESTAMP,
+    estado ENUM('FINALIZADO', 'PENDIENTE', 'ENTREGADO', 'CANCELADO') DEFAULT 'FINALIZADO',
+    CONSTRAINT fk_usuario_historial FOREIGN KEY (id_usuario) REFERENCES tb_usuarios(id_usuario),
+    CONSTRAINT fk_pedido_historial FOREIGN KEY (id_pedido) REFERENCES tb_pedidos(id_pedido)
+);
+
+ALTER TABLE tb_usuarios
+ADD COLUMN recovery_pin VARCHAR(10) NULL,
+ADD COLUMN pin_expiry DATETIME NULL;
+
+
 SELECT
  c.id_comentario,
  c.comentario,
